@@ -1,0 +1,65 @@
+{
+  "name": "@kwayteow/tiny-react-editor",
+  "version": "0.0.1",
+  "description": "A React component library for TinyMCE editor",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "cross-env PACKAGE_PATH=src vite",
+    "dev:src": "node env-setup.js src && vite",
+    "dev:dist": "node env-setup.js dist && vite",
+    "dev:npm": "node env-setup.js && vite",
+    "build:types": "tsc -p tsconfig.lib.json --emitDeclarationOnly",
+    "build:lib": "cross-env PACKAGE_PATH=dist vite build",
+    "build": "npm run build:types && npm run build:lib",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "prepare": "npm run build",
+    "setup:src": "node env-setup.js src",
+    "setup:dist": "node env-setup.js dist",
+    "setup:npm": "node env-setup.js"
+  },
+  "peerDependencies": {
+    "@tinymce/tinymce-react": "^6.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "tinymce": "^7.0.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@tinymce/tinymce-react": "^6.0.0",
+    "@types/node": "^20.17.31",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.11.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tinymce": "^7.7.1",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.11.0",
+    "vite": "^5.4.10",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "keywords": [
+    "react",
+    "tinymce",
+    "editor",
+    "wysiwyg"
+  ],
+  "author": "",
+  "license": "MIT"
+}

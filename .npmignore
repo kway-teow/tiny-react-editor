@@ -1,0 +1,31 @@
+# 源代码，只发布构建后的文件
+src/
+public/
+
+# 构建和开发配置
+node_modules/
+.vscode/
+.idea/
+.git/
+.github/
+tsconfig.app.json
+tsconfig.node.json
+tsconfig.json
+vite.config.ts
+*.lock
+*.log
+.gitignore
+eslint.config.js
+
+# 测试和示例
+__tests__/
+tests/
+examples/
+docs/
+
+# 临时文件
+.DS_Store
+*.swp
+*.swo
+*.tmp
+.cache/ 

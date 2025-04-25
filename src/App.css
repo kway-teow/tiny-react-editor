@@ -32,7 +32,7 @@
 }
 
 .editor-tabs button.active::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -1px;
@@ -129,7 +129,8 @@ button.active-protection {
   background-color: white;
 }
 
-.format-btn:hover, .format-btn:focus {
+.format-btn:hover,
+.format-btn:focus {
   background-color: #f0f0f0;
 }
 
@@ -175,7 +176,9 @@ button.active-protection {
   background-color: #0958d9;
 }
 
-.text-operations, .list-operations, .insert-operations {
+.text-operations,
+.list-operations,
+.insert-operations {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
@@ -233,7 +236,8 @@ button.active-protection {
   color: #555;
 }
 
-.header, .footer {
+.header,
+.footer {
   background-color: #f0f0f0;
   padding: 5px;
   text-align: center;
@@ -241,7 +245,7 @@ button.active-protection {
 }
 
 /* Additional styles for controls */
-.basic-controls, 
+.basic-controls,
 .readonly-controls {
   display: flex;
   gap: 10px;
@@ -250,7 +254,8 @@ button.active-protection {
 }
 
 /* Form control styles */
-select, input[type="text"] {
+select,
+input[type="text"] {
   padding: 8px 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -275,27 +280,27 @@ input[type="text"]::placeholder {
   .editor-tabs {
     flex-wrap: wrap;
   }
-  
+
   .editor-tabs button {
     flex: 1 1 auto;
     font-size: 12px;
     padding: 8px 10px;
   }
-  
+
   .fields-container {
     grid-template-columns: 1fr;
   }
-  
+
   .template-selector {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .control-group {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .control-section:not(:last-child) {
     border-right: none;
     border-bottom: 1px solid #e0e0e0;
@@ -309,7 +314,8 @@ input[type="text"]::placeholder {
 
 /* 全局样式 */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
   color: #333;
   background-color: #f5f5f5;
@@ -318,14 +324,14 @@ body {
 }
 
 .app-container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 h1 {
-  color: #333;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -390,7 +396,9 @@ main {
 }
 
 /* 全屏编辑器样式 */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -430,4 +438,44 @@ html, body, #root {
 
 .full-editor .tox .tox-edit-area__iframe {
   flex: 1;
+}
+
+.view-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.view-controls button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.view-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+.view-controls button.active {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+.editor-container,
+.raw-html {
+  margin-bottom: 30px;
+}
+
+.raw-html pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  border: 1px solid #ddd;
 }

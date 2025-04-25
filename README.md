@@ -1,80 +1,91 @@
-# TinyMCE React 编辑器
+# Tiny React Editor
 
-基于 TinyMCE 的 React 富文本编辑器组件，提供了完整的编辑器功能和只读模式。
+<div align="text">
+  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-blue.svg" alt="English" /></a>
+</div>
 
-## 安装
+A React rich text editor component based on TinyMCE, providing complete editor functionality and read-only mode.
+
+## Installation
 
 ```bash
-npm install tinymce-react-editor
-# 或
-yarn add tinymce-react-editor
-# 或
-pnpm add tinymce-react-editor
+npm install @kwayteow/tiny-react-editor
+# or
+yarn add @kwayteow/tiny-react-editor
+# or
+pnpm add @kwayteow/tiny-react-editor
 ```
 
-## 前提条件
+## Prerequisites
 
-您需要在项目中安装以下依赖：
+You need to install the following dependencies in your project:
 
 ```bash
 npm install react react-dom @tinymce/tinymce-react tinymce
 ```
 
-## 使用方法
+Dependency version requirements:
 
-### 编辑器组件
+- React: ^17.0.0 or ^18.0.0
+- React DOM: ^17.0.0 or ^18.0.0
+- @tinymce/tinymce-react: ^6.0.0
+- tinymce: ^7.0.0
+
+## Usage
+
+### Editor Component
 
 ```jsx
-import React, { useState } from 'react';
-import { TinyEditor } from 'tinymce-react-editor';
+import React, { useState } from "react";
+import { TinyEditor } from "@kwayteow/tiny-react-editor";
 
 function App() {
-  const [content, setContent] = useState('<p>Hello, World!</p>');
+  const [content, setContent] = useState("<p>Hello, World!</p>");
 
   return (
     <div>
-      <TinyEditor 
+      <TinyEditor
         value={content}
         onChange={setContent}
         height={500}
-        tinymceScriptSrc="/tinymce/tinymce.min.js" // TinyMCE脚本路径
-        contentCss="/css/editor-content.css" // 内容样式表
+        tinymceScriptSrc="/tinymce/tinymce.min.js" // TinyMCE script path
+        contentCss="/css/editor-content.css" // Content stylesheet
       />
     </div>
   );
 }
 ```
 
-### 只读模式
+### Read-Only Mode
 
 ```jsx
-import React from 'react';
-import { TinyEditorReadOnly } from 'tinymce-react-editor';
+import React from "react";
+import { TinyEditorReadOnly } from "@kwayteow/tiny-react-editor";
 
 function ReadOnlyView() {
   return (
     <div>
-      <TinyEditorReadOnly 
-        content="<p>这是只读内容</p>"
+      <TinyEditorReadOnly
+        content="<p>This is read-only content</p>"
         height={500}
-        tinymceScriptSrc="/tinymce/tinymce.min.js" // TinyMCE脚本路径
-        contentCss="/css/editor-content.css" // 内容样式表
+        tinymceScriptSrc="/tinymce/tinymce.min.js" // TinyMCE script path
+        contentCss="/css/editor-content.css" // Content stylesheet
       />
     </div>
   );
 }
 ```
 
-### 从URL加载内容
+### Loading Content from URL
 
 ```jsx
-import React from 'react';
-import { TinyEditorReadOnly } from 'tinymce-react-editor';
+import React from "react";
+import { TinyEditorReadOnly } from "@kwayteow/tiny-react-editor";
 
 function LoadFromUrl() {
   return (
     <div>
-      <TinyEditorReadOnly 
+      <TinyEditorReadOnly
         contentUrl="https://example.com/content.html"
         height={500}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
@@ -85,20 +96,47 @@ function LoadFromUrl() {
 }
 ```
 
-## 自定义字体族
+### Custom Font Family
 
 ```jsx
-import React from 'react';
-import { TinyEditor } from 'tinymce-react-editor';
+import React from "react";
+import { TinyEditor } from "@kwayteow/tiny-react-editor";
 
 function CustomFonts() {
-  // 自定义字体族配置
-  const customFontFamily = 'Arial=arial,helvetica,sans-serif; 宋体=simsun; 微软雅黑=microsoft yahei,sans-serif; 黑体=simhei; 楷体=kaiti; 仿宋=fangsong; 等线=dengxian; 自定义字体=CustomFont,sans-serif';
+  // Custom font family configuration
+  const customFontFamily =
+    "Arial=arial,helvetica,sans-serif; SimSun=simsun; Microsoft YaHei=microsoft yahei,sans-serif; SimHei=simhei; KaiTi=kaiti; FangSong=fangsong; DengXian=dengxian; CustomFont=CustomFont,sans-serif";
 
   return (
     <div>
-      <TinyEditor 
+      <TinyEditor
         fontFamilyFormats={customFontFamily}
+        tinymceScriptSrc="/tinymce/tinymce.min.js"
+      />
+    </div>
+  );
+}
+```
+
+### Custom Editor Configuration
+
+```jsx
+import React from "react";
+import { TinyEditor } from "@kwayteow/tiny-react-editor";
+
+function CustomConfig() {
+  // Custom editor configuration
+  const editorConfig = {
+    images_upload_url: "/api/upload-image",
+    file_picker_types: "image",
+    automatic_uploads: true,
+    // Other TinyMCE configuration options
+  };
+
+  return (
+    <div>
+      <TinyEditor
+        editorConfig={editorConfig}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
       />
     </div>
@@ -110,49 +148,66 @@ function CustomFonts() {
 
 ### TinyEditor Props
 
-| 属性             | 类型                   | 默认值 | 描述                           |
-| --------------- | ---------------------- | ------ | ------------------------------ |
-| value           | string                 | -      | 编辑器内容                      |
-| initialValue    | string                 | ''     | 初始内容                       |
-| height          | number \| string       | 500    | 编辑器高度                      |
-| disabled        | boolean                | false  | 是否禁用                       |
-| placeholder     | string                 | -      | 占位符文本                      |
-| style           | CSSProperties          | -      | 自定义样式                      |
-| className       | string                 | -      | 自定义类名                      |
-| onChange        | (content: string) => void | -  | 内容变化回调                     |
-| onReady         | (editor: any) => void  | -      | 编辑器实例准备就绪的回调         |
-| licenseKey      | string                 | ''     | TinyMCE 许可证密钥              |
-| toolbar         | string[]               | -      | 自定义工具栏配置                 |
-| plugins         | string[]               | -      | 自定义插件配置                   |
-| editorConfig    | Record<string, any>    | -      | 编辑器配置                      |
-| tinymceScriptSrc| string                 | '/tinymce/tinymce.min.js' | TinyMCE脚本路径 |
-| contentCss      | string                 | '/css/editor-content.css' | 内容样式表     |
-| fontFamilyFormats| string                | -      | 字体族配置                      |
-| fontSizeFormats | string                 | -      | 字体大小配置                     |
-| lineHeightFormats| string                | -      | 行高配置                        |
-| blockFormats    | string                 | -      | 块格式配置                      |
+| Property          | Type                      | Default                                                                                                                                                                | Description                             |
+| ----------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| value             | string                    | -                                                                                                                                                                      | Editor content                          |
+| initialValue      | string                    | ''                                                                                                                                                                     | Initial content                         |
+| height            | number \| string          | 500                                                                                                                                                                    | Editor height                           |
+| disabled          | boolean                   | false                                                                                                                                                                  | Whether disabled                        |
+| placeholder       | string                    | -                                                                                                                                                                      | Placeholder text                        |
+| style             | CSSProperties             | -                                                                                                                                                                      | Custom style                            |
+| className         | string                    | -                                                                                                                                                                      | Custom class name                       |
+| onChange          | (content: string) => void | -                                                                                                                                                                      | Content change callback                 |
+| onReady           | (editor: any) => void     | -                                                                                                                                                                      | Editor instance ready callback          |
+| licenseKey        | string                    | ''                                                                                                                                                                     | TinyMCE license key                     |
+| toolbar           | string[]                  | -                                                                                                                                                                      | Custom toolbar configuration            |
+| plugins           | string[]                  | -                                                                                                                                                                      | Custom plugins configuration            |
+| editorConfig      | Record<string, any>       | -                                                                                                                                                                      | Editor configuration, passed to TinyMCE |
+| tinymceScriptSrc  | string                    | '/tinymce/tinymce.min.js'                                                                                                                                              | TinyMCE script path                     |
+| contentCss        | string                    | '/css/editor-content.css'                                                                                                                                              | Content stylesheet                      |
+| fontFamilyFormats | string                    | 'Arial=arial,helvetica,sans-serif; SimSun=simsun; Microsoft YaHei=microsoft yahei,sans-serif; SimHei=simhei; KaiTi=kaiti; FangSong=fangsong; DengXian=dengxian'        | Font family configuration               |
+| fontSizeFormats   | string                    | '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px 56px 72px'                                                                                                          | Font size configuration                 |
+| lineHeightFormats | string                    | '1 1.2 1.4 1.6 2'                                                                                                                                                      | Line height configuration               |
+| blockFormats      | string                    | 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Blockquote=blockquote; Preformatted=pre; Address=address; Code=code' | Block format configuration              |
 
 ### TinyEditorReadOnly Props
 
-| 属性             | 类型                   | 默认值 | 描述                           |
-| --------------- | ---------------------- | ------ | ------------------------------ |
-| content         | string                 | -      | 显示内容                       |
-| contentUrl      | string                 | -      | 内容URL，如果提供则从URL加载内容 |
-| height          | number \| string       | 500    | 查看器高度                     |
-| style           | CSSProperties          | -      | 自定义样式                     |
-| className       | string                 | -      | 自定义类名                     |
-| errorText       | string                 | '加载内容失败' | 加载失败时的提示文本    |
-| indicator       | ReactNode              | -      | 自定义加载指示符               |
-| spinComponent   | React.ComponentType<any> | -    | 自定义加载组件                 |
-| tinymceScriptSrc| string                 | '/tinymce/tinymce.min.js' | TinyMCE脚本路径 |
-| contentCss      | string                 | '/css/editor-content.css' | 内容样式表     |
+| Property         | Type                     | Default                   | Description                             |
+| ---------------- | ------------------------ | ------------------------- | --------------------------------------- |
+| content          | string                   | -                         | Display content                         |
+| contentUrl       | string                   | -                         | Content URL, if provided, load from URL |
+| height           | number \| string         | 500                       | Viewer height                           |
+| style            | CSSProperties            | -                         | Custom style                            |
+| className        | string                   | -                         | Custom class name                       |
+| errorText        | string                   | 'Failed to load content'  | Error text when loading fails           |
+| indicator        | ReactNode                | -                         | Custom loading indicator                |
+| spinComponent    | React.ComponentType<any> | -                         | Custom loading component                |
+| tinymceScriptSrc | string                   | '/tinymce/tinymce.min.js' | TinyMCE script path                     |
+| contentCss       | string                   | '/css/editor-content.css' | Content stylesheet                      |
 
-## 注意事项
+### Spinner Component
 
-1. 使用前必须确保TinyMCE资源文件已正确加载，设置`tinymceScriptSrc`指向TinyMCE的根目录。
-2. 默认情况下，编辑器会查找`/css/editor-content.css`作为内容样式表，如果需要自定义样式，请通过`contentCss`属性指定。
-3. 如果需要使用高级特性（如图片上传等），需要自定义`editorConfig`属性。
+The library also exports a `Spinner` component that can be used to create custom loading states:
 
-## 许可证
+```jsx
+import { Spinner } from "@kwayteow/tiny-react-editor";
+
+function LoadingComponent() {
+  return (
+    <Spinner spinning={true} tip="Loading...">
+      <div>Content area</div>
+    </Spinner>
+  );
+}
+```
+
+## Notes
+
+1. Before use, make sure TinyMCE resource files are correctly loaded. Set `tinymceScriptSrc` to point to the TinyMCE root directory.
+2. By default, the editor looks for `/css/editor-content.css` as the content stylesheet. If you need to customize styles, specify them using the `contentCss` property.
+3. If you need to use advanced features (such as image upload), configure them through the `editorConfig` property.
+4. The TinyMCE editor defaults to Chinese (zh_CN) interface. For other languages, configure through the `language` property in `editorConfig`.
+
+## License
 
 MIT

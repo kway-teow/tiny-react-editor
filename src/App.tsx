@@ -197,6 +197,7 @@ helloWorld();</code></pre>
           <>
             <h2>编辑器</h2>
             <TinyEditor
+              initialValue={initialContent}
               value={content}
               onChange={setContent}
               height={700}

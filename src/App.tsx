@@ -335,7 +335,7 @@ helloWorld();</code></pre>
   `;
 
   // 添加语言状态和文本翻译
-  const [language, setLanguage] = useState<"zh" | "en">("zh");
+  const [language, setLanguage] = useState<"zh_CN" | "en">("en");
   const [content, setContent] = useState(initialContent);
   const [viewMode, setViewMode] = useState("edit");
   // 添加一个key状态，用于强制重新渲染编辑器
@@ -343,7 +343,7 @@ helloWorld();</code></pre>
 
   // 语言翻译文本
   const translations = {
-    zh: {
+    zh_CN: {
       appTitle: "TinyMCE React 编辑器演示",
       editMode: "编辑模式",
       readOnlyMode: "只读模式",
@@ -365,7 +365,7 @@ helloWorld();</code></pre>
 
   // 当语言改变时更新内容和重置编辑器
   useEffect(() => {
-    if (language === "zh") {
+    if (language === "zh_CN") {
       setContent(initialContent);
     } else {
       setContent(initialContentEn);
@@ -376,7 +376,7 @@ helloWorld();</code></pre>
 
   // 切换语言
   const toggleLanguage = () => {
-    setLanguage((prevLang) => (prevLang === "zh" ? "en" : "zh"));
+    setLanguage((prevLang) => (prevLang === "zh_CN" ? "en" : "zh_CN"));
   };
 
   const t = translations[language];

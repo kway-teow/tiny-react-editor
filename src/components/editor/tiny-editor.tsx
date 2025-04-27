@@ -41,7 +41,7 @@ export interface TinyEditorProps {
   /** 块格式配置 */
   blockFormats?: string;
   /** 编辑器界面语言 */
-  language?: string;
+  language?: "zh_CN" | "en";
 }
 
 export function TinyEditor({
@@ -64,7 +64,7 @@ export function TinyEditor({
   fontSizeFormats,
   lineHeightFormats,
   blockFormats,
-  language = "zh_CN",
+  language,
 }: TinyEditorProps) {
   const editorRef = useRef<any>(null);
 
@@ -92,10 +92,13 @@ export function TinyEditor({
     "emoticons",
     "hr",
     "print",
+    "fontfamily",
+    "fontsize",
+    "lineheight",
   ];
 
   const defaultToolbar = [
-    "undo redo | formatselect | fontfamily fontsizeselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify",
+    "undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify",
     "bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace code preview fullscreen | pagebreak print removeformat help",
   ];
 

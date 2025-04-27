@@ -89,6 +89,7 @@ export function TinyEditorReadOnly({
     } else {
       setDisplayContent(content || "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentUrl, content, errorText, language]); // 添加language作为依赖
 
   // 使用用户提供的Spin组件或默认的Spinner组件

@@ -23,7 +23,8 @@
     "setup:src": "node env-setup.js src",
     "setup:dist": "node env-setup.js dist",
     "setup:npm": "node env-setup.js",
-    "postinstall": "node cli/posinstall.js"
+    "postinstall": "node cli/posinstall.js",
+    "cz": "git add . && pnpm dlx git-cz"
   },
   "peerDependencies": {
     "@tinymce/tinymce-react": "^6.0.0",
@@ -49,6 +50,7 @@
     "globals": "^15.11.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "release-it": "^19.0.1",
     "tinymce": "^7.7.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",

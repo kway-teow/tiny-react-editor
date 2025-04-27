@@ -1,5 +1,5 @@
-import { Editor } from "@tinymce/tinymce-react";
-import { useRef, CSSProperties } from "react";
+import { Editor } from '@tinymce/tinymce-react';
+import { useRef, CSSProperties } from 'react';
 
 export interface TinyEditorProps {
   /** 初始内容 */
@@ -41,7 +41,7 @@ export interface TinyEditorProps {
   /** 块格式配置 */
   blockFormats?: string;
   /** 编辑器界面语言 */
-  language?: "zh_CN" | "en";
+  language?: 'zh_CN' | 'en';
 }
 
 export function TinyEditor({
@@ -55,11 +55,11 @@ export function TinyEditor({
   editorConfig,
   onChange,
   onReady,
-  licenseKey = "",
+  licenseKey = '',
   toolbar,
   plugins,
-  tinymceScriptSrc = "/tinymce/tinymce.min.js",
-  contentCss = "/css/editor-content.css",
+  tinymceScriptSrc = '/tinymce/tinymce.min.js',
+  contentCss = '/css/editor-content.css',
   fontFamilyFormats,
   fontSizeFormats,
   lineHeightFormats,
@@ -69,37 +69,37 @@ export function TinyEditor({
   const editorRef = useRef<any>(null);
 
   const defaultPlugins = [
-    "advlist",
-    "autolink",
-    "lists",
-    "link",
-    "image",
-    "charmap",
-    "anchor",
-    "searchreplace",
-    "visualblocks",
-    "code",
-    "fullscreen",
-    "insertdatetime",
-    "media",
-    "table",
-    "preview",
-    "help",
-    "wordcount",
-    "quickbars",
-    "noneditable",
-    "pagebreak",
-    "emoticons",
-    "hr",
-    "print",
-    "fontfamily",
-    "fontsize",
-    "lineheight",
+    'advlist',
+    'autolink',
+    'lists',
+    'link',
+    'image',
+    'charmap',
+    'anchor',
+    'searchreplace',
+    'visualblocks',
+    'code',
+    'fullscreen',
+    'insertdatetime',
+    'media',
+    'table',
+    'preview',
+    'help',
+    'wordcount',
+    'quickbars',
+    'noneditable',
+    'pagebreak',
+    'emoticons',
+    'hr',
+    'print',
+    'fontfamily',
+    'fontsize',
+    'lineheight',
   ];
 
   const defaultToolbar = [
-    "undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify",
-    "bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace code preview fullscreen | pagebreak print removeformat help",
+    'undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify',
+    'bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace code preview fullscreen | pagebreak print removeformat help',
   ];
 
   // 合并插件配置
@@ -114,73 +114,73 @@ export function TinyEditor({
 
   // 默认字体设置
   const defaultFontFamilyFormats =
-    "Arial=arial,helvetica,sans-serif; 宋体=simsun; 微软雅黑=microsoft yahei,sans-serif; 黑体=simhei; 楷体=kaiti; 仿宋=fangsong; 等线=dengxian";
+    'Arial=arial,helvetica,sans-serif; 宋体=simsun; 微软雅黑=microsoft yahei,sans-serif; 黑体=simhei; 楷体=kaiti; 仿宋=fangsong; 等线=dengxian';
   const defaultFontSizeFormats =
-    "12px 14px 16px 18px 20px 24px 28px 32px 36px 48px 56px 72px";
-  const defaultLineHeightFormats = "1 1.2 1.4 1.6 2";
+    '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px 56px 72px';
+  const defaultLineHeightFormats = '1 1.2 1.4 1.6 2';
 
   // 菜单本地化文本
   const getMenuLocalizations = () => {
     // 根据语言返回不同的菜单本地化文本
-    if (language && language.startsWith("zh")) {
+    if (language && language.startsWith('zh')) {
       return {
-        file: { title: "文件", items: "newdocument restoredraft print" },
+        file: { title: '文件', items: 'newdocument restoredraft print' },
         edit: {
-          title: "编辑",
+          title: '编辑',
           items:
-            "undo redo | cut copy paste pastetext | selectall | searchreplace",
+            'undo redo | cut copy paste pastetext | selectall | searchreplace',
         },
-        view: { title: "视图", items: "code | preview fullscreen" },
+        view: { title: '视图', items: 'code | preview fullscreen' },
         insert: {
-          title: "插入",
+          title: '插入',
           items:
-            "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+            'image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime',
         },
         format: {
-          title: "格式",
+          title: '格式',
           items:
-            "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat",
+            'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat',
         },
         tools: {
-          title: "工具",
-          items: "spellchecker spellcheckerlanguage | code wordcount",
+          title: '工具',
+          items: 'spellchecker spellcheckerlanguage | code wordcount',
         },
         table: {
-          title: "表格",
-          items: "inserttable | cell row column | tableprops deletetable",
+          title: '表格',
+          items: 'inserttable | cell row column | tableprops deletetable',
         },
-        help: { title: "帮助", items: "help" },
+        help: { title: '帮助', items: 'help' },
       };
     }
 
     // 英文菜单（默认）
     return {
-      file: { title: "File", items: "newdocument restoredraft print" },
+      file: { title: 'File', items: 'newdocument restoredraft print' },
       edit: {
-        title: "Edit",
+        title: 'Edit',
         items:
-          "undo redo | cut copy paste pastetext | selectall | searchreplace",
+          'undo redo | cut copy paste pastetext | selectall | searchreplace',
       },
-      view: { title: "View", items: "code | preview fullscreen" },
+      view: { title: 'View', items: 'code | preview fullscreen' },
       insert: {
-        title: "Insert",
+        title: 'Insert',
         items:
-          "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+          'image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime',
       },
       format: {
-        title: "Format",
+        title: 'Format',
         items:
-          "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat",
+          'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat',
       },
       tools: {
-        title: "Tools",
-        items: "spellchecker spellcheckerlanguage | code wordcount",
+        title: 'Tools',
+        items: 'spellchecker spellcheckerlanguage | code wordcount',
       },
       table: {
-        title: "Table",
-        items: "inserttable | cell row column | tableprops deletetable",
+        title: 'Table',
+        items: 'inserttable | cell row column | tableprops deletetable',
       },
-      help: { title: "Help", items: "help" },
+      help: { title: 'Help', items: 'help' },
     };
   };
 
@@ -192,12 +192,12 @@ export function TinyEditor({
     }
 
     // 根据语言返回不同的块格式默认值
-    if (language && language.startsWith("zh")) {
-      return "段落=p; 标题 1=h1; 标题 2=h2; 标题 3=h3; 标题 4=h4; 标题 5=h5; 标题 6=h6; 引用=blockquote; 预格式化=pre; 地址=address; 代码=code";
+    if (language && language.startsWith('zh')) {
+      return '段落=p; 标题 1=h1; 标题 2=h2; 标题 3=h3; 标题 4=h4; 标题 5=h5; 标题 6=h6; 引用=blockquote; 预格式化=pre; 地址=address; 代码=code';
     }
 
     // 英文块格式（默认）
-    return "Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Blockquote=blockquote; Preformatted=pre; Address=address; Code=code";
+    return 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Blockquote=blockquote; Preformatted=pre; Address=address; Code=code';
   };
   return (
     <div style={style} className={className}>
@@ -225,17 +225,17 @@ export function TinyEditor({
           highlight_on_focus: false,
           pagebreak_split_block: true,
           placeholder,
-          help_tabs: ["shortcuts", "keyboardnav", "plugins"],
+          help_tabs: ['shortcuts', 'keyboardnav', 'plugins'],
           plugins: mergedPlugins,
           toolbar: mergedToolbar,
           content_css: contentCss,
-          noneditable_class: "mceNonEditable",
+          noneditable_class: 'mceNonEditable',
           noneditable_regexp: [/\{[^}]*\}/g],
           line_height_formats: lineHeightFormats || defaultLineHeightFormats,
           font_family_formats: fontFamilyFormats || defaultFontFamilyFormats,
           font_size_formats: fontSizeFormats || defaultFontSizeFormats,
           block_formats: getLocalizedBlockFormats(),
-          images_upload_url: "",
+          images_upload_url: '',
           images_reuse_filename: true,
           ...editorConfig,
         }}

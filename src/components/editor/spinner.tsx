@@ -18,11 +18,11 @@ export interface SpinnerProps {
 // 默认的加载指示符
 const DefaultIndicator = () => {
   return (
-    <div 
-      style={{ 
-        display: 'inline-block', 
-        width: 24, 
-        height: 24, 
+    <div
+      style={{
+        display: 'inline-block',
+        width: 24,
+        height: 24,
         border: '2px solid transparent',
         borderTopColor: '#1677ff',
         borderRadius: '50%',
@@ -78,10 +78,10 @@ export const Spinner: React.FC<SpinnerProps> = ({
       `;
       document.head.appendChild(styleElement);
     }
-    
+
     // 不需要清理，因为其他组件可能也在使用
   }, []);
-  
+
   // 如果没有子元素，只显示 spinner
   if (!children) {
     return spinning ? (
@@ -91,7 +91,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
       </div>
     ) : null;
   }
-  
+
   return (
     <div className={`tinymce-editor-spinner-wrapper ${className}`} style={wrapperStyle}>
       {spinning && (
@@ -100,9 +100,9 @@ export const Spinner: React.FC<SpinnerProps> = ({
           {tip && <div style={{ marginTop: 8 }}>{tip}</div>}
         </div>
       )}
-      <div 
+      <div
         className="tinymce-editor-spinner-content"
-        style={{ 
+        style={{
           opacity: spinning ? 0.5 : 1,
           pointerEvents: spinning ? 'none' : 'auto',
           height: '100%',
@@ -114,4 +114,4 @@ export const Spinner: React.FC<SpinnerProps> = ({
   );
 };
 
-export default Spinner; 
+export default Spinner;

@@ -1,6 +1,6 @@
-import { Editor } from "@tinymce/tinymce-react";
-import { CSSProperties, useEffect, useState, ReactNode } from "react";
-import Spinner from "./spinner";
+import { Editor } from '@tinymce/tinymce-react';
+import { CSSProperties, useEffect, useState, ReactNode } from 'react';
+import Spinner from './spinner';
 
 export interface TinyEditorReadOnlyProps {
   /** 内容 */
@@ -33,35 +33,35 @@ export function TinyEditorReadOnly({
   height = 500,
   style,
   className,
-  errorText = "加载内容失败",
+  errorText = '加载内容失败',
   indicator,
   spinComponent: CustomSpin,
-  tinymceScriptSrc = "/tinymce/tinymce.min.js",
-  contentCss = "/css/editor-content.css",
-  language = "zh_CN",
+  tinymceScriptSrc = '/tinymce/tinymce.min.js',
+  contentCss = '/css/editor-content.css',
+  language = 'zh_CN',
 }: TinyEditorReadOnlyProps) {
-  const [displayContent, setDisplayContent] = useState(content || "");
+  const [displayContent, setDisplayContent] = useState(content || '');
   const [loading, setLoading] = useState(false);
 
   // 根据语言设置错误文本
   const getLocalizedErrorText = () => {
-    if (errorText && errorText !== "加载内容失败") {
+    if (errorText && errorText !== '加载内容失败') {
       return errorText; // 如果用户提供了自定义错误文本，优先使用
     }
 
     // 根据语言设置默认错误信息
-    if (language && language.startsWith("zh")) {
-      return "加载内容失败";
+    if (language && language.startsWith('zh')) {
+      return '加载内容失败';
     }
-    return "Failed to load content";
+    return 'Failed to load content';
   };
 
   // 本地化加载提示
   const getLoadingTip = () => {
-    if (language && language.startsWith("zh")) {
-      return "加载中...";
+    if (language && language.startsWith('zh')) {
+      return '加载中...';
     }
-    return "Loading...";
+    return 'Loading...';
   };
 
   useEffect(() => {
@@ -71,12 +71,12 @@ export function TinyEditorReadOnly({
         try {
           const response = await fetch(contentUrl);
           if (!response.ok) {
-            throw new Error("Failed to fetch content");
+            throw new Error('Failed to fetch content');
           }
           const result = await response.text();
           setDisplayContent(result);
         } catch (error) {
-          console.error("Failed to load content:", error);
+          console.error('Failed to load content:', error);
           setDisplayContent(getLocalizedErrorText());
         } finally {
           setLoading(false);
@@ -87,7 +87,7 @@ export function TinyEditorReadOnly({
     if (contentUrl) {
       loadContent();
     } else {
-      setDisplayContent(content || "");
+      setDisplayContent(content || '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentUrl, content, errorText, language]); // 添加language作为依赖
@@ -115,28 +115,28 @@ export function TinyEditorReadOnly({
             elementpath: false,
             branding: false,
             highlight_on_focus: false,
-            plugins: ["link"],
+            plugins: ['link'],
             content_css: contentCss,
-            body_class: "readonly-content",
+            body_class: 'readonly-content',
             link_assume_external_targets: true,
             link_context_toolbar: false,
-            extended_valid_elements: "a[href|target=_blank]",
+            extended_valid_elements: 'a[href|target=_blank]',
             setup: (editor) => {
-              editor.on("click", (e) => {
+              editor.on('click', (e) => {
                 const dom = editor.dom;
-                const anchorElm = dom.getParent(e.target, "a");
+                const anchorElm = dom.getParent(e.target, 'a');
                 if (anchorElm) {
-                  const href = dom.getAttrib(anchorElm, "href");
+                  const href = dom.getAttrib(anchorElm, 'href');
                   if (href) {
                     e.preventDefault();
-                    if (href.startsWith("#")) {
+                    if (href.startsWith('#')) {
                       const targetId = href.substring(1);
                       const target = editor.getDoc().getElementById(targetId);
                       if (target) {
-                        target.scrollIntoView({ behavior: "smooth" });
+                        target.scrollIntoView({ behavior: 'smooth' });
                       }
                     } else {
-                      window.open(href, "_blank");
+                      window.open(href, '_blank');
                     }
                     return false;
                   }

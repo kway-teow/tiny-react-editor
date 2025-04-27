@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { TinyEditor, TinyEditorReadOnly } from "@kwayteow/tiny-react-editor";
-import "./App.css";
+import { useState, useEffect } from 'react';
+import { TinyEditor, TinyEditorReadOnly } from '@kwayteow/tiny-react-editor';
+import './App.css';
 
 /**
  * Main application component
@@ -335,48 +335,49 @@ helloWorld();</code></pre>
   `;
 
   // 添加语言状态和文本翻译
-  const [language, setLanguage] = useState<"zh_CN" | "en">("en");
+  const [language, setLanguage] = useState<'zh_CN' | 'en'>('en');
   const [content, setContent] = useState(initialContent);
-  const [viewMode, setViewMode] = useState("edit");
+  const [viewMode, setViewMode] = useState('edit');
   // 添加一个key状态，用于强制重新渲染编辑器
   const [editorKey, setEditorKey] = useState(0);
 
   // 语言翻译文本
   const translations = {
     zh_CN: {
-      appTitle: "TinyMCE React 编辑器演示",
-      editMode: "编辑模式",
-      readOnlyMode: "只读模式",
-      editor: "编辑器",
-      readOnlyView: "只读视图",
-      htmlSource: "HTML 源码",
-      switchLanguage: "English",
+      appTitle: 'TinyMCE React 编辑器演示',
+      editMode: '编辑模式',
+      readOnlyMode: '只读模式',
+      editor: '编辑器',
+      readOnlyView: '只读视图',
+      htmlSource: 'HTML 源码',
+      switchLanguage: 'English',
     },
     en: {
-      appTitle: "TinyMCE React Editor Demo",
-      editMode: "Edit Mode",
-      readOnlyMode: "Read-only Mode",
-      editor: "Editor",
-      readOnlyView: "Read-only View",
-      htmlSource: "HTML Source",
-      switchLanguage: "中文",
+      appTitle: 'TinyMCE React Editor Demo',
+      editMode: 'Edit Mode',
+      readOnlyMode: 'Read-only Mode',
+      editor: 'Editor',
+      readOnlyView: 'Read-only View',
+      htmlSource: 'HTML Source',
+      switchLanguage: '中文',
     },
   };
 
   // 当语言改变时更新内容和重置编辑器
   useEffect(() => {
-    if (language === "zh_CN") {
+    if (language === 'zh_CN') {
       setContent(initialContent);
     } else {
       setContent(initialContentEn);
     }
     // 增加key以强制重新创建编辑器组件
     setEditorKey((prev) => prev + 1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   // 切换语言
   const toggleLanguage = () => {
-    setLanguage((prevLang) => (prevLang === "zh_CN" ? "en" : "zh_CN"));
+    setLanguage((prevLang) => (prevLang === 'zh_CN' ? 'en' : 'zh_CN'));
   };
 
   const t = translations[language];
@@ -392,21 +393,21 @@ helloWorld();</code></pre>
 
       <div className="view-controls">
         <button
-          className={viewMode === "edit" ? "active" : ""}
-          onClick={() => setViewMode("edit")}
+          className={viewMode === 'edit' ? 'active' : ''}
+          onClick={() => setViewMode('edit')}
         >
           {t.editMode}
         </button>
         <button
-          className={viewMode === "readonly" ? "active" : ""}
-          onClick={() => setViewMode("readonly")}
+          className={viewMode === 'readonly' ? 'active' : ''}
+          onClick={() => setViewMode('readonly')}
         >
           {t.readOnlyMode}
         </button>
       </div>
 
       <div className="editor-container">
-        {viewMode === "edit" ? (
+        {viewMode === 'edit' ? (
           <>
             <h2>{t.editor}</h2>
             <TinyEditor

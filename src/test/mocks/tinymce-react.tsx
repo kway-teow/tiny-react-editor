@@ -18,6 +18,7 @@ const MockEditorComponent: ForwardRefRenderFunction<any, any> = (props, ref) => 
 
       onInit(null, mockEditor);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 模拟文本区域，简单展示内容

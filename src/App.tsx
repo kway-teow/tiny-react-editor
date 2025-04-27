@@ -8,7 +8,7 @@ import './App.css';
 const App = () => {
   // 丰富的编辑器初始内容，展示各种功能
   const initialContent = `
-    <h1 style="text-align: center; color: #4a86e8;">TinyMCE 编辑器全功能展示</h1>
+    <h1 style="text-align: center; color: #4a86e8;">Tiny 编辑器全功能展示</h1>
 
     <h2 style="border-bottom: 2px solid #4a86e8; padding-bottom: 5px;">基础文本格式</h2>
     <p><strong>粗体文本</strong>, <em>斜体文本</em>, <u>下划线文本</u>, <span style="text-decoration: line-through;">删除线</span>, <sub>下标</sub>, <sup>上标</sup></p>
@@ -172,7 +172,7 @@ helloWorld();</code></pre>
 
   // 英文版的初始内容
   const initialContentEn = `
-    <h1 style="text-align: center; color: #4a86e8;">TinyMCE Editor Full Feature Demo</h1>
+    <h1 style="text-align: center; color: #4a86e8;">Tiny Editor Full Feature Demo</h1>
 
     <h2 style="border-bottom: 2px solid #4a86e8; padding-bottom: 5px;">Basic Text Formatting</h2>
     <p><strong>Bold text</strong>, <em>Italic text</em>, <u>Underlined text</u>, <span style="text-decoration: line-through;">Strikethrough</span>, <sub>Subscript</sub>, <sup>Superscript</sup></p>
@@ -385,6 +385,7 @@ helloWorld();</code></pre>
   return (
     <div className="app-container">
       <div className="app-header">
+        <img src="/logo.png" alt="Logo" className="app-logo" />
         <h1>{t.appTitle}</h1>
         <button className="language-switch-btn" onClick={toggleLanguage}>
           {t.switchLanguage}

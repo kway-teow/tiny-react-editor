@@ -482,9 +482,14 @@ body,
 
 .app-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.app-logo {
+  height: 40px;
+  margin-right: 15px;
 }
 
 .language-switch-btn {

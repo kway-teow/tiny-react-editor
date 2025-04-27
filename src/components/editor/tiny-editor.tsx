@@ -40,6 +40,8 @@ export interface TinyEditorProps {
   lineHeightFormats?: string;
   /** 块格式配置 */
   blockFormats?: string;
+  /** 编辑器界面语言 */
+  language?: string;
 }
 
 export function TinyEditor({
@@ -62,6 +64,7 @@ export function TinyEditor({
   fontSizeFormats,
   lineHeightFormats,
   blockFormats,
+  language = "zh_CN",
 }: TinyEditorProps) {
   const editorRef = useRef<any>(null);
 
@@ -112,9 +115,87 @@ export function TinyEditor({
   const defaultFontSizeFormats =
     "12px 14px 16px 18px 20px 24px 28px 32px 36px 48px 56px 72px";
   const defaultLineHeightFormats = "1 1.2 1.4 1.6 2";
-  const defaultBlockFormats =
-    "段落=p; 标题 1=h1; 标题 2=h2; 标题 3=h3; 标题 4=h4; 标题 5=h5; 标题 6=h6; 引用=blockquote; 预格式化=pre; 地址=address; 代码=code";
 
+  // 菜单本地化文本
+  const getMenuLocalizations = () => {
+    // 根据语言返回不同的菜单本地化文本
+    if (language && language.startsWith("zh")) {
+      return {
+        file: { title: "文件", items: "newdocument restoredraft print" },
+        edit: {
+          title: "编辑",
+          items:
+            "undo redo | cut copy paste pastetext | selectall | searchreplace",
+        },
+        view: { title: "视图", items: "code | preview fullscreen" },
+        insert: {
+          title: "插入",
+          items:
+            "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+        },
+        format: {
+          title: "格式",
+          items:
+            "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat",
+        },
+        tools: {
+          title: "工具",
+          items: "spellchecker spellcheckerlanguage | code wordcount",
+        },
+        table: {
+          title: "表格",
+          items: "inserttable | cell row column | tableprops deletetable",
+        },
+        help: { title: "帮助", items: "help" },
+      };
+    }
+
+    // 英文菜单（默认）
+    return {
+      file: { title: "File", items: "newdocument restoredraft print" },
+      edit: {
+        title: "Edit",
+        items:
+          "undo redo | cut copy paste pastetext | selectall | searchreplace",
+      },
+      view: { title: "View", items: "code | preview fullscreen" },
+      insert: {
+        title: "Insert",
+        items:
+          "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+      },
+      format: {
+        title: "Format",
+        items:
+          "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat",
+      },
+      tools: {
+        title: "Tools",
+        items: "spellchecker spellcheckerlanguage | code wordcount",
+      },
+      table: {
+        title: "Table",
+        items: "inserttable | cell row column | tableprops deletetable",
+      },
+      help: { title: "Help", items: "help" },
+    };
+  };
+
+  // 获取块格式本地化配置
+  const getLocalizedBlockFormats = () => {
+    // 如果用户提供了自定义的块格式，直接使用
+    if (blockFormats) {
+      return blockFormats;
+    }
+
+    // 根据语言返回不同的块格式默认值
+    if (language && language.startsWith("zh")) {
+      return "段落=p; 标题 1=h1; 标题 2=h2; 标题 3=h3; 标题 4=h4; 标题 5=h5; 标题 6=h6; 引用=blockquote; 预格式化=pre; 地址=address; 代码=code";
+    }
+
+    // 英文块格式（默认）
+    return "Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Blockquote=blockquote; Preformatted=pre; Address=address; Code=code";
+  };
   return (
     <div style={style} className={className}>
       <Editor
@@ -133,35 +214,8 @@ export function TinyEditor({
         init={{
           height,
           menubar: true,
-          menu: {
-            file: { title: "文件", items: "newdocument restoredraft print" },
-            edit: {
-              title: "编辑",
-              items:
-                "undo redo | cut copy paste pastetext | selectall | searchreplace",
-            },
-            view: { title: "视图", items: "code | preview fullscreen" },
-            insert: {
-              title: "插入",
-              items:
-                "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
-            },
-            format: {
-              title: "格式",
-              items:
-                "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat",
-            },
-            tools: {
-              title: "工具",
-              items: "spellchecker spellcheckerlanguage | code wordcount",
-            },
-            table: {
-              title: "表格",
-              items: "inserttable | cell row column | tableprops deletetable",
-            },
-            help: { title: "帮助", items: "help" },
-          },
-          language: "zh_CN",
+          menu: getMenuLocalizations(),
+          language,
           elementpath: false,
           branding: false,
           promotion: false,
@@ -177,7 +231,7 @@ export function TinyEditor({
           line_height_formats: lineHeightFormats || defaultLineHeightFormats,
           font_family_formats: fontFamilyFormats || defaultFontFamilyFormats,
           font_size_formats: fontSizeFormats || defaultFontSizeFormats,
-          block_formats: blockFormats || defaultBlockFormats,
+          block_formats: getLocalizedBlockFormats(),
           images_upload_url: "",
           images_reuse_filename: true,
           ...editorConfig,

@@ -21,7 +21,6 @@
     "build-doc": "vite build --config vite.doc.config.ts",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "npm run build",
     "cz": "git add . && pnpm dlx git-cz && git push",
     "test": "vitest run",
     "test:watch": "vitest",

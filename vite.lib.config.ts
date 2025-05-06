@@ -42,11 +42,6 @@ export default defineConfig({
       },
     },
   },
-  // 配置开发服务器
-  server: {
-    port: 10023, // 设置默认端口为8080
-    host: true, // 监听所有地址，包括局域网和公网地址
-  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),

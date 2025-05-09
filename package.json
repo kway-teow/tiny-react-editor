@@ -1,6 +1,6 @@
 {
   "name": "@kwayteow/tiny-react-editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "description": "A React component library for TinyMCE editor",
   "type": "module",

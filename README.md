@@ -1,7 +1,11 @@
 # Tiny React Editor
 
-<div align="text">
-  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-blue.svg" alt="English" /></a>
+[中文](README.zh-CN.md)
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/v/@kwayteow/tiny-react-editor.svg" alt="Version" /></a>
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/dm/@kwayteow/tiny-react-editor.svg" alt="Downloads" /></a>
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/l/@kwayteow/tiny-react-editor.svg" alt="License" /></a>
 </div>
 
 A React rich text editor component based on TinyMCE, providing complete editor functionality and read-only mode.

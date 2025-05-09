@@ -1,7 +1,11 @@
 # Tiny React 编辑器
 
-<div align="text">
-  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/语言-中文-red.svg" alt="中文" /></a>
+[英文](README.md)
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/v/@kwayteow/tiny-react-editor.svg" alt="版本" /></a>
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/dm/@kwayteow/tiny-react-editor.svg" alt="下载量" /></a>
+  <a href="https://www.npmjs.com/package/@kwayteow/tiny-react-editor"><img src="https://img.shields.io/npm/l/@kwayteow/tiny-react-editor.svg" alt="许可证" /></a>
 </div>
 
 基于 TinyMCE 的 React 富文本编辑器组件，提供了完整的编辑器功能和只读模式。

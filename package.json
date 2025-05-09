@@ -11,7 +11,6 @@
     "dist"
   ],
   "scripts": {
-    "dev": "cross-env PACKAGE_PATH=src vite --config vite.doc.config.ts",
     "dev:src": "cross-env PACKAGE_PATH=src vite --config vite.doc.config.ts",
     "dev:dist": "cross-env PACKAGE_PATH=dist vite --config vite.doc.config.ts",
     "dev:npm": "cross-env PACKAGE_PATH=npm vite --config vite.doc.config.ts",

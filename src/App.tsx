@@ -335,7 +335,7 @@ helloWorld();</code></pre>
   `;
 
   // 添加语言状态和文本翻译
-  const [language, setLanguage] = useState<'zh_CN' | 'en'>('en');
+  const [language, setLanguage] = useState<'zh_CN' | 'en'>('zh_CN');
   const [content, setContent] = useState(initialContent);
   const [viewMode, setViewMode] = useState('edit');
   // 添加一个key状态，用于强制重新渲染编辑器

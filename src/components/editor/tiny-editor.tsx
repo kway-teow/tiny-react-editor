@@ -42,6 +42,8 @@ export interface TinyEditorProps {
   blockFormats?: string;
   /** 编辑器界面语言 */
   language?: 'zh_CN' | 'en';
+  /** 是否显示源代码按钮，默认为false */
+  showCodeButton?: boolean;
 }
 
 export function TinyEditor({
@@ -65,6 +67,7 @@ export function TinyEditor({
   lineHeightFormats,
   blockFormats,
   language,
+  showCodeButton = false,
 }: TinyEditorProps) {
   const editorRef = useRef<any>(null);
 
@@ -97,10 +100,20 @@ export function TinyEditor({
     'lineheight',
   ];
 
-  const defaultToolbar = [
-    'undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify',
-    'bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace code preview fullscreen | pagebreak print removeformat help',
-  ];
+  // 根据是否显示code按钮来生成工具栏
+  const getDefaultToolbar = () => {
+    const firstToolbar = 'undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify';
+
+    let secondToolbar = 'bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace';
+
+    if (showCodeButton) {
+      secondToolbar += ' code';
+    }
+
+    secondToolbar += ' preview fullscreen | pagebreak print removeformat help';
+
+    return [firstToolbar, secondToolbar];
+  };
 
   // 合并插件配置
   const mergedPlugins = plugins
@@ -109,15 +122,24 @@ export function TinyEditor({
 
   // 合并工具栏配置
   const mergedToolbar = toolbar
-    ? [...defaultToolbar, ...toolbar]
-    : defaultToolbar;
+    ? [...getDefaultToolbar(), ...toolbar]
+    : getDefaultToolbar();
 
   // 默认字体设置
   const defaultFontFamilyFormats =
-    'Arial=arial,helvetica,sans-serif; 宋体=simsun; 微软雅黑=microsoft yahei,sans-serif; 黑体=simhei; 楷体=kaiti; 仿宋=fangsong; 等线=dengxian';
+    '宋体=simsun; Arial=arial,helvetica,sans-serif; 微软雅黑=microsoft yahei,sans-serif; 黑体=simhei; 楷体=kaiti; 仿宋=fangsong; 等线=dengxian';
   const defaultFontSizeFormats =
     '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px 56px 72px';
   const defaultLineHeightFormats = '1 1.2 1.4 1.6 2';
+
+  // 修改tools菜单项，根据showCodeButton控制code选项的显示
+  const getToolsMenuItems = () => {
+    if (showCodeButton) {
+      return 'spellchecker spellcheckerlanguage | code wordcount';
+    } else {
+      return 'spellchecker spellcheckerlanguage | wordcount';
+    }
+  };
 
   // 菜单本地化文本
   const getMenuLocalizations = () => {
@@ -130,7 +152,10 @@ export function TinyEditor({
           items:
             'undo redo | cut copy paste pastetext | selectall | searchreplace',
         },
-        view: { title: '视图', items: 'code | preview fullscreen' },
+        view: {
+          title: '视图',
+          items: 'preview fullscreen'
+        },
         insert: {
           title: '插入',
           items:
@@ -143,7 +168,7 @@ export function TinyEditor({
         },
         tools: {
           title: '工具',
-          items: 'spellchecker spellcheckerlanguage | code wordcount',
+          items: getToolsMenuItems(),
         },
         table: {
           title: '表格',
@@ -161,7 +186,10 @@ export function TinyEditor({
         items:
           'undo redo | cut copy paste pastetext | selectall | searchreplace',
       },
-      view: { title: 'View', items: 'code | preview fullscreen' },
+      view: {
+        title: 'View',
+        items: 'preview fullscreen'
+      },
       insert: {
         title: 'Insert',
         items:
@@ -174,7 +202,7 @@ export function TinyEditor({
       },
       tools: {
         title: 'Tools',
-        items: 'spellchecker spellcheckerlanguage | code wordcount',
+        items: getToolsMenuItems(),
       },
       table: {
         title: 'Table',
@@ -199,6 +227,12 @@ export function TinyEditor({
     // 英文块格式（默认）
     return 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Blockquote=blockquote; Preformatted=pre; Address=address; Code=code';
   };
+
+  // 生成基础内容样式
+  const getBaseContentStyle = () => {
+    return 'body { font-family: simsun; }';
+  };
+
   return (
     <div style={style} className={className}>
       <Editor
@@ -237,6 +271,67 @@ export function TinyEditor({
           block_formats: getLocalizedBlockFormats(),
           images_upload_url: '',
           images_reuse_filename: true,
+          link_assume_external_targets: true,
+          link_context_toolbar: true,
+          extended_valid_elements: 'a[href|target=_blank]',
+          content_style: getBaseContentStyle(),
+          // 增强粘贴功能配置
+          paste_merge_formats: true,
+          paste_remove_styles_if_webkit: true,
+          paste_preprocess: (plugin, args) => {
+            // 处理从飞书复制的内容
+            let content = args.content;
+
+            // 处理飞书特殊的无序列表格式
+            content = content.replace(/<li[^>]*class="[^"]*ace-line[^"]*"[^>]*data-list="bullet"[^>]*>/gi, '<li>');
+            content = content.replace(/<div[^>]*>(.+?)<\/div>/gi, '$1');
+
+            // 清理其他无用飞书类和属性
+            content = content.replace(/\s+class="[^"]*ace-line[^"]*"/gi, '');
+            content = content.replace(/\s+old-record-id="[^"]*"/gi, '');
+            content = content.replace(/\s+data-list="[^"]*"/gi, '');
+
+            args.content = content;
+          },
+          paste_postprocess: (plugin, args) => {
+            // 简化粘贴后的结构
+            const dom = args.node;
+
+            // 移除多余的嵌套div
+            const divs = dom.querySelectorAll('li > div');
+            divs.forEach(div => {
+              const parentNode = div.parentNode;
+              if (parentNode) {
+                while (div.firstChild) {
+                  parentNode.insertBefore(div.firstChild, div);
+                }
+                parentNode.removeChild(div);
+              }
+            });
+          },
+          setup: (editor) => {
+            // 添加链接点击处理功能
+            editor.on('click', (e) => {
+              const dom = editor.dom;
+              const anchorElm = dom.getParent(e.target, 'a');
+              if (anchorElm) {
+                const href = dom.getAttrib(anchorElm, 'href');
+                if (href) {
+                  e.preventDefault();
+                  if (href.startsWith('#')) {
+                    const targetId = href.substring(1);
+                    const target = editor.getDoc().getElementById(targetId);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  } else {
+                    window.open(href, '_blank');
+                  }
+                  return false;
+                }
+              }
+            });
+          },
           ...editorConfig,
         }}
       />

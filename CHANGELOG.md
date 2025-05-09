@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.0.3](https://github.com/kway-teow/tiny-react-editor/compare/v0.0.2...v0.0.3) (2025-05-09)
+
 ## 0.0.2 (2025-04-27)
 
 

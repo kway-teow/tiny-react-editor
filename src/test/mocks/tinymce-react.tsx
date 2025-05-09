@@ -1,47 +1,100 @@
-import { useEffect, forwardRef, ForwardRefRenderFunction } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { vi } from 'vitest';
 
-// 模拟Editor组件
-const MockEditorComponent: ForwardRefRenderFunction<any, any> = (props, ref) => {
-  const { onInit, onEditorChange, value, initialValue } = props;
+export interface EditorProps {
+  onInit?: (editor: any) => void;
+  onEditorChange?: (content: string) => void;
+  value?: string;
+  initialValue?: string;
+  init?: any;
+  className?: string;
+  disabled?: boolean;
+}
+
+export const MockEditorComponent: FC<EditorProps> = ({
+  onInit,
+  onEditorChange,
+  value,
+  initialValue,
+  init,
+  className,
+  disabled
+}) => {
+  const [content, setContent] = useState(initialValue || value || '');
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
-    // 模拟编辑器初始化
-    if (onInit) {
-      const mockEditor = {
-        getContent: () => value || initialValue || '',
-        setContent: vi.fn(),
-        on: vi.fn(),
-        off: vi.fn(),
-        destroy: vi.fn(),
-      };
-
-      onInit(null, mockEditor);
+    if (value !== undefined) {
+      setContent(value);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [value]);
 
-  // 模拟文本区域，简单展示内容
+  useEffect(() => {
+    // 创建一个模拟的editor对象
+    const mockEditor = {
+      getContent: () => content,
+      setContent: (newContent: string) => {
+        setContent(newContent);
+        onEditorChange?.(newContent);
+      },
+      on: (event: string, callback: (e: any) => void) => callback,
+      off: vi.fn(),
+      destroy: vi.fn(),
+      getDoc: () => document,
+      getBody: () => document.body,
+      selection: {
+        getContent: () => content,
+      },
+      // 添加更多方法
+      dom: {
+        getParent: vi.fn(),
+        getAttrib: vi.fn()
+      }
+    };
+
+    editorRef.current = mockEditor;
+    onInit?.(mockEditor);
+
+    // 处理init中的setup函数
+    if (init?.setup) {
+      init.setup(mockEditor);
+    }
+
+    return () => {
+      mockEditor.destroy();
+    };
+  }, [onInit]);
+
   return (
-    <div data-testid="mock-tinymce-editor" ref={ref}>
+    <div className={className || 'tinymce-editor-spinner-content'} style={init?.style}>
       <textarea
         data-testid="mock-tinymce-textarea"
-        value={value || initialValue || ''}
+        value={content}
         onChange={(e) => {
-          if (onEditorChange) {
-            onEditorChange(e.target.value);
-          }
+          const newContent = e.target.value;
+          setContent(newContent);
+          onEditorChange?.(newContent);
         }}
+        disabled={disabled}
       />
+      {init && (
+        <pre data-testid="mock-tinymce-config">
+          {JSON.stringify({
+            ...init,
+            disabled: disabled
+          }, null, 2)}
+        </pre>
+      )}
+      <div data-testid="mock-tinymce-editor"></div>
     </div>
   );
 };
 
-export const Editor = forwardRef(MockEditorComponent);
+export const Editor = MockEditorComponent;
 
-// 导出模拟函数以便在测试中验证
+// 导出模拟函数以便测试
 export const mockFunctions = {
   init: vi.fn(),
-  setContent: vi.fn(),
-  getContent: vi.fn(),
+  setup: vi.fn(),
+  remove: vi.fn(),
 };

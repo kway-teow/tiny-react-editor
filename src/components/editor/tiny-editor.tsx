@@ -1,5 +1,5 @@
 import { Editor } from '@tinymce/tinymce-react';
-import { useRef, CSSProperties } from 'react';
+import { CSSProperties, useRef } from 'react';
 
 export interface TinyEditorProps {
   /** 初始内容 */
@@ -275,40 +275,6 @@ export function TinyEditor({
           link_context_toolbar: true,
           extended_valid_elements: 'a[href|target=_blank]',
           content_style: getBaseContentStyle(),
-          // 增强粘贴功能配置
-          paste_merge_formats: true,
-          paste_remove_styles_if_webkit: true,
-          paste_preprocess: (plugin, args) => {
-            // 处理从飞书复制的内容
-            let content = args.content;
-
-            // 处理飞书特殊的无序列表格式
-            content = content.replace(/<li[^>]*class="[^"]*ace-line[^"]*"[^>]*data-list="bullet"[^>]*>/gi, '<li>');
-            content = content.replace(/<div[^>]*>(.+?)<\/div>/gi, '$1');
-
-            // 清理其他无用飞书类和属性
-            content = content.replace(/\s+class="[^"]*ace-line[^"]*"/gi, '');
-            content = content.replace(/\s+old-record-id="[^"]*"/gi, '');
-            content = content.replace(/\s+data-list="[^"]*"/gi, '');
-
-            args.content = content;
-          },
-          paste_postprocess: (plugin, args) => {
-            // 简化粘贴后的结构
-            const dom = args.node;
-
-            // 移除多余的嵌套div
-            const divs = dom.querySelectorAll('li > div');
-            divs.forEach(div => {
-              const parentNode = div.parentNode;
-              if (parentNode) {
-                while (div.firstChild) {
-                  parentNode.insertBefore(div.firstChild, div);
-                }
-                parentNode.removeChild(div);
-              }
-            });
-          },
           setup: (editor) => {
             // 添加链接点击处理功能
             editor.on('click', (e) => {

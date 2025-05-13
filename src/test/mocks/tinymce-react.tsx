@@ -37,19 +37,33 @@ export const MockEditorComponent: FC<EditorProps> = ({
         setContent(newContent);
         onEditorChange?.(newContent);
       },
-      on: (event: string, callback: (e: any) => void) => callback,
+      on: (_event: string, callback: (e: any) => void) => callback,
       off: vi.fn(),
       destroy: vi.fn(),
       getDoc: () => document,
       getBody: () => document.body,
       selection: {
         getContent: () => content,
+        getSelectedBlocks: () => []
       },
-      // 添加更多方法
+      // 添加UI registry对象，解决测试失败问题
+      ui: {
+        registry: {
+          addIcon: vi.fn(),
+          addButton: vi.fn(),
+          addMenuItem: vi.fn(),
+          getAll: () => ({})
+        }
+      },
+      windowManager: {
+        open: vi.fn()
+      },
       dom: {
         getParent: vi.fn(),
-        getAttrib: vi.fn()
-      }
+        getAttrib: vi.fn(),
+        setStyle: vi.fn()
+      },
+      addShortcut: vi.fn()
     };
 
     editorRef.current = mockEditor;

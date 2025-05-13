@@ -298,6 +298,66 @@ export function TinyEditor({
             editor.ui.registry.addIcon('indent_left', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm4 4h12v2H8zm0 4h12v2H8zM4 15V9l4 3z"/></svg>');
             editor.ui.registry.addIcon('indent_right', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm0 4h12v2H4zm0 4h12v2H4zm16 0v-6l-4 3z"/></svg>');
 
+            // 监听预览窗口的打开
+            editor.on('BeforeOpenPreview', (e: any) => {
+              // 在预览内容中注入处理链接点击的脚本
+              const content = editor.getContent();
+              const scriptTag = `
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('click', function(e) {
+                      var target = e.target;
+                      if (target.tagName === 'A') {
+                        var href = target.getAttribute('href');
+                        if (href) {
+                          e.preventDefault();
+                          if (href.startsWith('#')) {
+                            var element = document.getElementById(href.substring(1));
+                            if (element) {
+                              element.scrollIntoView({behavior: 'smooth'});
+                            }
+                          } else {
+                            window.open(href, '_blank');
+                          }
+                        }
+                      }
+                    });
+                  });
+                </script>
+              `;
+              const htmlWithScript = content + scriptTag;
+              editor.windowManager.open({
+                title: language && language.startsWith('zh') ? '预览' : 'Preview',
+                size: 'large',
+                body: {
+                  type: 'panel',
+                  items: [
+                    {
+                      type: 'iframe',
+                      name: 'preview-iframe'
+                    }
+                  ]
+                },
+                buttons: [
+                  {
+                    type: 'cancel',
+                    name: 'close',
+                    text: language && language.startsWith('zh') ? '关闭' : 'Close'
+                  }
+                ],
+                initialData: {
+                  'preview-iframe': htmlWithScript
+                },
+                onSubmit: function () {
+                  return true;
+                }
+              });
+
+              // 阻止默认预览窗口的打开
+              e.preventDefault();
+              return false;
+            });
+
             // 增加缩进按钮
             editor.ui.registry.addButton('indent_left', {
               icon: 'indent_left',

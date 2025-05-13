@@ -152,25 +152,68 @@ export function TinyEditorReadOnly({
             extended_valid_elements: 'a[href|target=_blank]',
             content_style: getBaseContentStyle(),
             setup: (editor) => {
-              editor.on('click', (e) => {
-                const dom = editor.dom;
-                const anchorElm = dom.getParent(e.target, 'a');
-                if (anchorElm) {
-                  const href = dom.getAttrib(anchorElm, 'href');
-                  if (href) {
-                    e.preventDefault();
-                    if (href.startsWith('#')) {
-                      const targetId = href.substring(1);
-                      const target = editor.getDoc().getElementById(targetId);
-                      if (target) {
-                        target.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    } else {
-                      window.open(href, '_blank');
-                    }
-                    return false;
+              // 增强链接点击处理
+              editor.on('init', () => {
+                // 确保编辑器初始化完成后应用
+                const editorDoc = editor.getDoc();
+
+                // 移除默认的点击处理器
+                editor.off('click');
+
+                // 为文档添加新的点击事件监听器
+                editorDoc.addEventListener('click', (e) => {
+                  // 找到最近的a元素
+                  let target = e.target as HTMLElement;
+                  let linkFound = false;
+
+                  // 向上查找到a标签
+                  while (target && target.tagName !== 'A' && target !== editorDoc.body) {
+                    target = target.parentElement as HTMLElement;
                   }
-                }
+
+                  if (target && target.tagName === 'A') {
+                    linkFound = true;
+                    const href = target.getAttribute('href');
+                    if (href) {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      if (href.startsWith('#')) {
+                        // 内部锚点链接
+                        const targetId = href.substring(1);
+                        const targetElement = editorDoc.getElementById(targetId);
+                        if (targetElement) {
+                          targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      } else {
+                        // 外部链接
+                        window.open(href, '_blank');
+                      }
+                    }
+                  }
+
+                  // 如果点击的不是链接，阻止事件继续传播
+                  if (!linkFound) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }, true);
+
+                // 修改样式使链接看起来可点击
+                const styleElement = editorDoc.createElement('style');
+                styleElement.textContent = `
+                  a[href] {
+                    cursor: pointer !important;
+                    pointer-events: auto !important;
+                    text-decoration: underline !important;
+                    color: #0066cc !important;
+                  }
+                  a[href]:hover {
+                    color: #0056b3 !important;
+                    text-decoration: underline !important;
+                  }
+                `;
+                editorDoc.head.appendChild(styleElement);
               });
             },
           }}

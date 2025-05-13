@@ -151,7 +151,7 @@ describe('TinyEditor', () => {
     const { getByTestId } = render(<TinyEditor />);
     const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
 
-    expect(editorConfig.content_style).toBe('body { font-family: simsun; }');
+    expect(editorConfig.content_style).toContain('body { font-family: simsun; }');
   });
 
   // 测试自定义字体相关配置

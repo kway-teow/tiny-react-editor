@@ -104,7 +104,8 @@ export function TinyEditor({
       secondToolbar += ' code';
     }
 
-    secondToolbar += ' preview fullscreen | pagebreak print removeformat help';
+    // 只保留自定义预览按钮，移除原生preview
+    secondToolbar += ' custom_preview fullscreen | pagebreak print removeformat help';
 
     return [firstToolbar, secondToolbar];
   };
@@ -148,7 +149,7 @@ export function TinyEditor({
         },
         view: {
           title: '视图',
-          items: 'preview fullscreen'
+          items: 'custom_preview fullscreen'
         },
         insert: {
           title: '插入',
@@ -182,7 +183,7 @@ export function TinyEditor({
       },
       view: {
         title: 'View',
-        items: 'preview fullscreen'
+        items: 'custom_preview fullscreen'
       },
       insert: {
         title: 'Insert',
@@ -251,6 +252,88 @@ export function TinyEditor({
     `;
   };
 
+  // 自定义预览功能
+  const handlePreview = () => {
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const content = editor.getContent();
+
+    // 构建HTML预览内容
+    const previewHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${language && language.startsWith('zh') ? '预览' : 'Preview'}</title>
+        <link rel="stylesheet" href="${contentCss}">
+        <style>
+          body {
+            font-family: SimSun, serif;
+            margin: 20px;
+            padding: 20px;
+          }
+          a {
+            color: #0066cc;
+            text-decoration: underline;
+            cursor: pointer;
+          }
+        </style>
+      </head>
+      <body>
+        ${content}
+        <script>
+          document.addEventListener('click', function(e) {
+            var target = e.target;
+            if (target.tagName === 'A') {
+              var href = target.getAttribute('href');
+              if (href) {
+                e.preventDefault();
+                if (href.startsWith('#')) {
+                  var element = document.getElementById(href.substring(1));
+                  if (element) {
+                    element.scrollIntoView({behavior: 'smooth'});
+                  }
+                } else {
+                  window.open(href, '_blank');
+                }
+              }
+            }
+          });
+        </script>
+      </body>
+      </html>
+    `;
+
+    // 使用TinyMCE的窗口管理器显示弹窗预览
+    editor.windowManager.open({
+      title: language && language.startsWith('zh') ? '预览' : 'Preview',
+      size: 'large',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'iframe',
+            name: 'preview-iframe'
+          }
+        ]
+      },
+      buttons: [
+        {
+          type: 'cancel',
+          name: 'close',
+          text: language && language.startsWith('zh') ? '关闭' : 'Close'
+        }
+      ],
+      initialData: {
+        'preview-iframe': previewHtml
+      },
+      onSubmit: function () {
+        return true;
+      }
+    });
+  };
+
   return (
     <div style={style} className={className}>
       <Editor
@@ -294,69 +377,31 @@ export function TinyEditor({
           extended_valid_elements: 'a[href|target=_blank]',
           content_style: getBaseContentStyle(),
           setup: (editor) => {
-            // 添加自定义首行缩进按钮
-            editor.ui.registry.addIcon('indent_left', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm4 4h12v2H8zm0 4h12v2H8zM4 15V9l4 3z"/></svg>');
-            editor.ui.registry.addIcon('indent_right', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm0 4h12v2H4zm0 4h12v2H4zm16 0v-6l-4 3z"/></svg>');
+            // 保存编辑器实例引用
+            editorRef.current = editor;
+
+            // 添加自定义预览按钮
+            editor.ui.registry.addIcon('custom_preview', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>');
+
+            editor.ui.registry.addButton('custom_preview', {
+              icon: 'custom_preview',
+              tooltip: language && language.startsWith('zh') ? '自定义预览' : 'Custom Preview',
+              onAction: () => handlePreview()
+            });
 
             // 监听预览窗口的打开
             editor.on('BeforeOpenPreview', (e: any) => {
-              // 在预览内容中注入处理链接点击的脚本
-              const content = editor.getContent();
-              const scriptTag = `
-                <script>
-                  document.addEventListener('DOMContentLoaded', function() {
-                    document.addEventListener('click', function(e) {
-                      var target = e.target;
-                      if (target.tagName === 'A') {
-                        var href = target.getAttribute('href');
-                        if (href) {
-                          e.preventDefault();
-                          if (href.startsWith('#')) {
-                            var element = document.getElementById(href.substring(1));
-                            if (element) {
-                              element.scrollIntoView({behavior: 'smooth'});
-                            }
-                          } else {
-                            window.open(href, '_blank');
-                          }
-                        }
-                      }
-                    });
-                  });
-                </script>
-              `;
-              const htmlWithScript = content + scriptTag;
-              editor.windowManager.open({
-                title: language && language.startsWith('zh') ? '预览' : 'Preview',
-                size: 'large',
-                body: {
-                  type: 'panel',
-                  items: [
-                    {
-                      type: 'iframe',
-                      name: 'preview-iframe'
-                    }
-                  ]
-                },
-                buttons: [
-                  {
-                    type: 'cancel',
-                    name: 'close',
-                    text: language && language.startsWith('zh') ? '关闭' : 'Close'
-                  }
-                ],
-                initialData: {
-                  'preview-iframe': htmlWithScript
-                },
-                onSubmit: function () {
-                  return true;
-                }
-              });
+              // 调用自定义预览功能
+              handlePreview();
 
               // 阻止默认预览窗口的打开
               e.preventDefault();
               return false;
             });
+
+            // 添加自定义首行缩进按钮
+            editor.ui.registry.addIcon('indent_left', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm4 4h12v2H8zm0 4h12v2H8zM4 15V9l4 3z"/></svg>');
+            editor.ui.registry.addIcon('indent_right', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm0 4h12v2H4zm0 4h12v2H4zm16 0v-6l-4 3z"/></svg>');
 
             // 增加缩进按钮
             editor.ui.registry.addButton('indent_left', {

@@ -1,5 +1,14 @@
 # Changelog
 
+# [0.1.0](https://github.com/kway-teow/tiny-react-editor/compare/v0.0.3...v0.1.0) (2025-05-13)
+
+
+### Features
+
+* 增强 TinyEditor 组件的链接处理和自定义预览功能 ([23b4653](https://github.com/kway-teow/tiny-react-editor/commit/23b4653d893c24efe780bf228eacb2050f85a4d9))
+* 增强链接点击处理和预览窗口功能 ([e4105f2](https://github.com/kway-teow/tiny-react-editor/commit/e4105f29db1049ceb38bec6b4d164f90bdfe7fd9))
+* 添加中文语言支持并更新 TinyMCE 相关文件 ([84636a2](https://github.com/kway-teow/tiny-react-editor/commit/84636a246f9db2b097fbcecdc1a44f4fbf2bfaa2))
+
 ## [0.0.3](https://github.com/kway-teow/tiny-react-editor/compare/v0.0.2...v0.0.3) (2025-05-09)
 
 ## 0.0.2 (2025-04-27)

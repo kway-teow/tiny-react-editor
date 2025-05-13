@@ -1,5 +1,5 @@
 import { Editor } from '@tinymce/tinymce-react';
-import { CSSProperties, useEffect, useState, ReactNode } from 'react';
+import { CSSProperties, ReactNode, useEffect, useState } from 'react';
 import Spinner from './spinner';
 
 export interface TinyEditorReadOnlyProps {
@@ -95,6 +95,35 @@ export function TinyEditorReadOnly({
   // 使用用户提供的Spin组件或默认的Spinner组件
   const SpinComponent = CustomSpin || Spinner;
 
+  // 生成基础内容样式
+  const getBaseContentStyle = () => {
+    return `
+      body { font-family: simsun; }
+
+      /* 列表样式设置 */
+      ul {
+        padding-left: 20px;
+        margin: 10px 0;
+      }
+
+      ul li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+
+      /* 有序列表样式 */
+      ol {
+        padding-left: 20px;
+        margin: 10px 0;
+      }
+
+      ol li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+    `;
+  };
+
   return (
     <div style={style} className={className}>
       <SpinComponent
@@ -121,6 +150,7 @@ export function TinyEditorReadOnly({
             link_assume_external_targets: true,
             link_context_toolbar: false,
             extended_valid_elements: 'a[href|target=_blank]',
+            content_style: getBaseContentStyle(),
             setup: (editor) => {
               editor.on('click', (e) => {
                 const dom = editor.dom;

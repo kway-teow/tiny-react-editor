@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { TinyEditor, TinyEditorReadOnly } from '@kwayteow/tiny-react-editor';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 /**
@@ -419,6 +419,7 @@ helloWorld();</code></pre>
               tinymceScriptSrc="/tinymce/tinymce.min.js"
               contentCss="/css/editor-content.css"
               language={language}
+              licenseKey='vmasvxldzz4t22e3y8vdm5i458vb7zl0ajvotosf47w9bvzw'
             />
           </>
         ) : (

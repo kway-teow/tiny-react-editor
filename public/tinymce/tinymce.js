@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 7.7.1 (2025-03-05)
+ * TinyMCE version 7.8.0 (TBD)
  */
 
 (function () {
@@ -7210,6 +7210,8 @@
         },
         default: []
       });
+      registerOption('extended_mathml_attributes', { processor: 'string[]' });
+      registerOption('extended_mathml_elements', { processor: 'string[]' });
       registerOption('inline_boundaries', {
         processor: 'boolean',
         default: true
@@ -7248,6 +7250,11 @@
       });
       registerOption('event_root', { processor: 'string' });
       registerOption('service_message', { processor: 'string' });
+      registerOption('onboarding', {
+        processor: 'boolean',
+        default: true
+      });
+      registerOption('tiny_cloud_entry_url', { processor: 'string' });
       registerOption('theme', {
         processor: value => value === false || isString(value) || isFunction(value),
         default: 'silver'
@@ -8035,7 +8042,7 @@
         }
       };
       const startBlink = () => {
-        cursorInterval = setInterval(() => {
+        cursorInterval = window.setInterval(() => {
           lastVisualCaret.on(caretState => {
             if (hasFocus()) {
               dom.toggleClass(caretState.caret, 'mce-visual-caret-hidden');
@@ -9387,10 +9394,11 @@
       'div[data-ephox-embed-iri]',
       'div.tiny-pageembed',
       'div.mce-toc',
-      'div[data-mce-toc]'
+      'div[data-mce-toc]',
+      'div.mce-footnotes'
     ];
     const isZeroWidth = elem => isText$c(elem) && get$3(elem) === ZWSP$1;
-    const context = (editor, elem, wrapName, nodeName) => parent(elem).fold(() => 'skipping', parent => {
+    const context = (editor, elem, wrapName, nodeName) => parentElement(elem).fold(() => 'skipping', parent => {
       if (nodeName === 'br' || isZeroWidth(elem)) {
         return 'valid';
       } else if (isAnnotation(elem)) {
@@ -9719,13 +9727,13 @@
       if (!isNumber(time)) {
         time = 0;
       }
-      return setTimeout(callback, time);
+      return window.setTimeout(callback, time);
     };
     const wrappedSetInterval = (callback, time) => {
       if (!isNumber(time)) {
         time = 0;
       }
-      return setInterval(callback, time);
+      return window.setInterval(callback, time);
     };
     const Delay = {
       setEditorTimeout: (editor, callback, time) => {
@@ -9740,7 +9748,7 @@
           if (!editor.removed) {
             callback();
           } else {
-            clearInterval(timer);
+            window.clearInterval(timer);
           }
         }, time);
         return timer;
@@ -11005,10 +11013,11 @@
     };
     const scrollToMarker = (editor, marker, viewHeight, alignToTop, doc) => {
       const pos = marker.pos;
+      const scrollMargin = 30;
       if (alignToTop) {
-        to(pos.left, pos.top, doc);
+        to(pos.left, Math.max(0, pos.top - scrollMargin), doc);
       } else {
-        const y = pos.top - viewHeight + marker.height;
+        const y = pos.top - viewHeight + marker.height + scrollMargin;
         to(-editor.getBody().getBoundingClientRect().left, y, doc);
       }
     };
@@ -15513,12 +15522,12 @@
     const MUSTACHE_EXPR = seal(/\{\{[\w\W]*|[\w\W]*\}\}/gm); // Specify template detection regex for SAFE_FOR_TEMPLATES mode
     const ERB_EXPR = seal(/<%[\w\W]*|[\w\W]*%>/gm);
     const TMPLIT_EXPR = seal(/\$\{[\w\W]*/gm); // eslint-disable-line unicorn/better-regex
-    const DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]+$/);  
-    const ARIA_ATTR = seal(/^aria-[\-\w]+$/);  
-    const IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i  
+    const DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]+$/); // eslint-disable-line no-useless-escape
+    const ARIA_ATTR = seal(/^aria-[\-\w]+$/); // eslint-disable-line no-useless-escape
+    const IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i // eslint-disable-line no-useless-escape
     );
     const IS_SCRIPT_OR_DATA = seal(/^(?:\w+script|data):/i);
-    const ATTR_WHITESPACE = seal(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g  
+    const ATTR_WHITESPACE = seal(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g // eslint-disable-line no-control-regex
     );
     const DOCTYPE_NAME = seal(/^html$/i);
     const CUSTOM_ELEMENT = seal(/^[a-z][.\w]*(-[.\w]+)+$/i);
@@ -15827,7 +15836,7 @@
        *
        * @param cfg optional config literal
        */
-       
+      // eslint-disable-next-line complexity
       const _parseConfig = function _parseConfig() {
         let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         if (CONFIG && CONFIG === cfg) {
@@ -16165,7 +16174,7 @@
        */
       const _createNodeIterator = function _createNodeIterator(root) {
         return createNodeIterator.call(root.ownerDocument || root, root,
-         
+        // eslint-disable-next-line no-bitwise
         NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT | NodeFilter.SHOW_PROCESSING_INSTRUCTION | NodeFilter.SHOW_CDATA_SECTION, null);
       };
       /**
@@ -16294,7 +16303,7 @@
        * @param value Attribute value.
        * @return Returns true if `value` is valid, otherwise false.
        */
-       
+      // eslint-disable-next-line complexity
       const _isValidAttribute = function _isValidAttribute(lcTag, lcName, value) {
         /* Make sure attribute cannot clobber */
         if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement)) {
@@ -16481,7 +16490,7 @@
         /* Execute a hook if present */
         _executeHooks(hooks.afterSanitizeShadowDOM, fragment, null);
       };
-       
+      // eslint-disable-next-line complexity
       DOMPurify.sanitize = function (dirty) {
         let cfg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         let body = null;
@@ -17130,18 +17139,39 @@
         const encoding = el.getAttribute('encoding');
         return hasAllowedEncodings && isString(encoding) && contains$2(allowedEncodings, encoding);
       };
+      const isValidElementOpt = (node, lcTagName) => {
+        if (hasAllowedEncodings && lcTagName === 'semantics') {
+          return Optional.some(true);
+        } else if (lcTagName === 'annotation') {
+          return Optional.some(isElement$6(node) && hasValidEncoding(node));
+        } else if (isArray$1(settings.extended_mathml_elements)) {
+          if (settings.extended_mathml_elements.includes(lcTagName)) {
+            return Optional.from(true);
+          } else {
+            return Optional.none();
+          }
+        } else {
+          return Optional.none();
+        }
+      };
       purify$1.addHook('uponSanitizeElement', (node, evt) => {
         var _a;
         const lcTagName = (_a = evt.tagName) !== null && _a !== void 0 ? _a : node.nodeName.toLowerCase();
-        if (hasAllowedEncodings && lcTagName === 'semantics') {
-          evt.allowedTags[lcTagName] = true;
-        }
-        if (lcTagName === 'annotation') {
-          const elm = node;
-          const keepElement = hasValidEncoding(elm);
+        const keepElementOpt = isValidElementOpt(node, lcTagName);
+        keepElementOpt.each(keepElement => {
           evt.allowedTags[lcTagName] = keepElement;
-          if (!keepElement) {
-            elm.remove();
+          if (!keepElement && settings.sanitize) {
+            if (isElement$6(node)) {
+              node.remove();
+            }
+          }
+        });
+      });
+      purify$1.addHook('uponSanitizeAttribute', (_node, event) => {
+        if (isArray$1(settings.extended_mathml_attributes)) {
+          const keepAttribute = settings.extended_mathml_attributes.includes(event.attrName);
+          if (keepAttribute) {
+            event.forceKeepAttr = true;
           }
         }
       });
@@ -23464,15 +23494,18 @@
           return getCellFirstCursorPosition(cell);
         });
       }, current => {
-        if (editor.mode.isReadOnly()) {
+        if (editor.mode.isReadOnly() || !isCellInEditableTable(current)) {
           return Optional.none();
         }
         editor.execCommand('mceTableInsertRowAfter');
         return tabForward(editor, isRoot, current);
       });
     };
-    const tabForward = (editor, isRoot, cell) => tabGo(editor, isRoot, next(cell, isEditable$2));
-    const tabBackward = (editor, isRoot, cell) => tabGo(editor, isRoot, prev(cell, isEditable$2));
+    const isCellInEditableTable = cell => closest$4(cell, isTag('table')).exists(isEditable$2);
+    const tabForward = (editor, isRoot, cell) => tabGo(editor, isRoot, next(cell, isCellEditable));
+    const tabBackward = (editor, isRoot, cell) => tabGo(editor, isRoot, prev(cell, isCellEditable));
+    const isCellEditable = cell => isEditable$2(cell) || descendant(cell, isEditableHTMLElement);
+    const isEditableHTMLElement = node => isHTMLElement$1(node) && isEditable$2(node);
     const handleTab = (editor, forward) => {
       const rootElements = [
         'table',
@@ -24130,6 +24163,7 @@
     const optionOf = (key, schema) => field(key, key, asOption(), schema);
     const optionString = key => optionOf(key, string);
     const optionFunction = key => optionOf(key, functionProcessor);
+    const optionObjOf = (key, objSchema) => optionOf(key, objOf(objSchema));
     const defaulted = (key, fallback) => field(key, key, defaulted$1(fallback), anyValue());
     const defaultedOf = (key, fallback, schema) => field(key, key, defaulted$1(fallback), schema);
     const defaultedNumber = (key, fallback) => defaultedOf(key, fallback, number);
@@ -24204,7 +24238,7 @@
       onAction,
       customField('original', identity)
     ]);
-    const launchButtonFields = baseToolbarButtonFields.concat([defaultedType('contextformbutton')]);
+    const launchButtonFields$1 = baseToolbarButtonFields.concat([defaultedType('contextformbutton')]);
     const launchToggleButtonFields = baseToolbarToggleButtonFields.concat([defaultedType('contextformtogglebutton')]);
     const toggleOrNormal = choose('type', {
       contextformbutton: contextButtonFields,
@@ -24214,7 +24248,7 @@
       optionalLabel,
       requiredArrayOf('commands', toggleOrNormal),
       optionOf('launch', choose('type', {
-        contextformbutton: launchButtonFields,
+        contextformbutton: launchButtonFields$1,
         contextformtogglebutton: launchToggleButtonFields
       })),
       defaultedFunction('onInput', noop),
@@ -24250,8 +24284,10 @@
       contextsizeinputform: contextSizeInputFormFields
     });
 
+    const launchButtonFields = baseToolbarButtonFields.concat([defaultedType('contexttoolbarbutton')]);
     objOf([
       defaultedType('contexttoolbar'),
+      optionObjOf('launch', launchButtonFields),
       requiredOf('items', oneOf([
         string,
         arrOfObj([
@@ -28957,6 +28993,8 @@
         allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
         convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
         convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
+        extended_mathml_attributes: getOption('extended_mathml_attributes'),
+        extended_mathml_elements: getOption('extended_mathml_elements'),
         fix_list_elements: getOption('fix_list_elements'),
         font_size_legacy_values: getOption('font_size_legacy_values'),
         forced_root_block: getOption('forced_root_block'),
@@ -31638,8 +31676,8 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '7',
-      minorVersion: '7.1',
-      releaseDate: '2025-03-05',
+      minorVersion: '8.0',
+      releaseDate: 'TBD',
       i18n: I18n,
       activeEditor: null,
       focusedEditor: null,
@@ -32058,7 +32096,7 @@
         if (!done) {
           done = true;
           if (timer !== null) {
-            clearTimeout(timer);
+            window.clearTimeout(timer);
             timer = null;
           }
           completer.apply(null, args);
@@ -32068,7 +32106,7 @@
       const reject = complete(rejectCb);
       const start = (...args) => {
         if (!done && timer === null) {
-          timer = setTimeout(() => reject.apply(null, args), timeout);
+          timer = window.setTimeout(() => reject.apply(null, args), timeout);
         }
       };
       return {

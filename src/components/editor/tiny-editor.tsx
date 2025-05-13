@@ -90,19 +90,13 @@ export function TinyEditor({
     'help',
     'wordcount',
     'quickbars',
-    'noneditable',
     'pagebreak',
     'emoticons',
-    'hr',
-    'print',
-    'fontfamily',
-    'fontsize',
-    'lineheight',
-  ];
+];
 
   // 根据是否显示code按钮来生成工具栏
   const getDefaultToolbar = () => {
-    const firstToolbar = 'undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify';
+    const firstToolbar = 'undo redo | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | indent_left indent_right';
 
     let secondToolbar = 'bullist numlist outdent indent | link image media table | emoticons charmap hr insertdatetime | searchreplace';
 
@@ -164,7 +158,7 @@ export function TinyEditor({
         format: {
           title: '格式',
           items:
-            'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat',
+            'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | indent_left indent_right | forecolor backcolor | removeformat',
         },
         tools: {
           title: '工具',
@@ -198,7 +192,7 @@ export function TinyEditor({
       format: {
         title: 'Format',
         items:
-          'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat',
+          'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | indent_left indent_right | forecolor backcolor | removeformat',
       },
       tools: {
         title: 'Tools',
@@ -230,7 +224,31 @@ export function TinyEditor({
 
   // 生成基础内容样式
   const getBaseContentStyle = () => {
-    return 'body { font-family: simsun; }';
+    return `
+      body { font-family: simsun; }
+
+      /* 列表样式设置 */
+      ul {
+        padding-left: 20px;
+        margin: 10px 0;
+      }
+
+      ul li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+
+      /* 有序列表样式 */
+      ol {
+        padding-left: 20px;
+        margin: 10px 0;
+      }
+
+      ol li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+    `;
   };
 
   return (
@@ -276,6 +294,69 @@ export function TinyEditor({
           extended_valid_elements: 'a[href|target=_blank]',
           content_style: getBaseContentStyle(),
           setup: (editor) => {
+            // 添加自定义首行缩进按钮
+            editor.ui.registry.addIcon('indent_left', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm4 4h12v2H8zm0 4h12v2H8zM4 15V9l4 3z"/></svg>');
+            editor.ui.registry.addIcon('indent_right', '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 7h16v2H4zm0 4h12v2H4zm0 4h12v2H4zm16 0v-6l-4 3z"/></svg>');
+
+            // 增加缩进按钮
+            editor.ui.registry.addButton('indent_left', {
+              icon: 'indent_left',
+              tooltip: language && language.startsWith('zh') ? '减少缩进' : 'Decrease indent',
+              onAction: () => {
+                adjustIndent(-20); // 减少20px缩进
+              }
+            });
+
+            editor.ui.registry.addButton('indent_right', {
+              icon: 'indent_right',
+              tooltip: language && language.startsWith('zh') ? '增加缩进' : 'Increase indent',
+              onAction: () => {
+                adjustIndent(20); // 增加20px缩进
+              }
+            });
+
+            // 添加菜单项
+            editor.ui.registry.addMenuItem('indent_left', {
+              icon: 'indent_left',
+              text: language && language.startsWith('zh') ? '减少缩进' : 'Decrease indent',
+              onAction: () => {
+                adjustIndent(-20);
+              }
+            });
+
+            editor.ui.registry.addMenuItem('indent_right', {
+              icon: 'indent_right',
+              text: language && language.startsWith('zh') ? '增加缩进' : 'Increase indent',
+              onAction: () => {
+                adjustIndent(20);
+              }
+            });
+
+            // 添加快捷键
+            editor.addShortcut('Meta+[', language && language.startsWith('zh') ? '减少缩进' : 'Decrease indent', () => {
+              adjustIndent(-20);
+            });
+
+            editor.addShortcut('Meta+]', language && language.startsWith('zh') ? '增加缩进' : 'Increase indent', () => {
+              adjustIndent(20);
+            });
+
+            // 缩进调整函数
+            const adjustIndent = (delta: number) => {
+              const selection = editor.selection;
+              const selectedBlocks = selection.getSelectedBlocks();
+
+              if (selectedBlocks.length === 0) return;
+
+              selectedBlocks.forEach((block) => {
+                const htmlBlock = block as HTMLElement; // 类型断言为HTMLElement
+                const currentMarginLeft = parseInt(htmlBlock.style.marginLeft || '0', 10);
+                const newMarginLeft = Math.max(0, currentMarginLeft + delta); // 确保不小于0
+
+                editor.dom.setStyle(block, 'margin-left', newMarginLeft > 0 ? `${newMarginLeft}px` : '');
+              });
+            };
+
             // 添加链接点击处理功能
             editor.on('click', (e) => {
               const dom = editor.dom;

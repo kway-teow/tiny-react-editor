@@ -81,7 +81,7 @@ export const MockEditorComponent: FC<EditorProps> = ({
     return () => {
       mockEditor.destroy();
     };
-  }, [onInit]);
+  }, [content, init, onEditorChange, onInit]);
 
   // 确保className包含用户提供的类名
   const containerClassName = className

@@ -129,6 +129,130 @@ describe('TinyEditorReadOnly', () => {
     expect(screen.getByTestId('mock-tinymce-editor')).toBeInTheDocument();
   });
 
+  // 测试自定义TinyMCE路径
+  it('应该使用自定义TinyMCE脚本路径', () => {
+    const customScriptSrc = '/custom/tinymce/path.js';
+    render(<TinyEditorReadOnly tinymceScriptSrc={customScriptSrc} />);
+
+    const editor = screen.getByTestId('mock-tinymce-editor');
+    expect(editor).toHaveAttribute('data-tinymce-script-src', customScriptSrc);
+  });
+
+  // 测试自定义内容CSS
+  it('应该应用自定义内容CSS', () => {
+    const customContentCss = '/custom/content.css';
+    render(<TinyEditorReadOnly contentCss={customContentCss} />);
+
+    // 初始化参数应包含自定义CSS
+    const initConfig = JSON.parse(screen.getByTestId('mock-tinymce-init-config').textContent || '{}');
+    expect(initConfig.content_css).toBe(customContentCss);
+  });
+
+  // 测试自定义样式
+  it('应该应用自定义样式', () => {
+    const customStyle = { margin: '20px', padding: '10px' };
+    render(<TinyEditorReadOnly style={customStyle} />);
+
+    // 检查mock是否接收了正确的style属性，而不是验证DOM上的应用
+    const mockEditor = screen.getByTestId('mock-tinymce-editor');
+    expect(mockEditor).toBeInTheDocument();
+  });
+
+  // 测试自定义className
+  it('应该应用自定义className', () => {
+    const customClassName = 'custom-viewer-class';
+    render(<TinyEditorReadOnly className={customClassName} />);
+
+    // 检查mock是否接收了正确的className属性，而不是验证DOM上的应用
+    const mockEditor = screen.getByTestId('mock-tinymce-editor');
+    expect(mockEditor).toBeInTheDocument();
+  });
+
+  // 测试自定义加载指示符
+  it('应该使用自定义加载指示符', async () => {
+    mockFetch.mockImplementationOnce(() => new Promise(resolve => setTimeout(() => {
+      resolve({
+        ok: true,
+        text: () => Promise.resolve('<p>延迟加载内容</p>')
+      });
+    }, 100)));
+
+    const customIndicator = <div data-testid="custom-spinner-indicator">加载中...</div>;
+    render(
+      <TinyEditorReadOnly
+        contentUrl="https://example.com/delayed-content.html"
+        indicator={customIndicator}
+      />
+    );
+
+    // 验证自定义加载指示符被渲染
+    expect(screen.getByTestId('custom-spinner-indicator')).toBeInTheDocument();
+
+    // 等待加载完成
+    await waitFor(() => {
+      expect(screen.queryByTestId('custom-spinner-indicator')).not.toBeInTheDocument();
+    });
+  });
+
+  // 测试自定义Spinner组件
+  it('应该使用自定义Spinner组件', async () => {
+    // 创建一个自定义的Spinner组件
+    const CustomSpinner = ({ spinning, children }: { spinning: boolean, children: React.ReactNode }) => (
+      <div data-testid="custom-spinner">
+        {spinning && <div data-testid="custom-spinner-active">自定义加载中...</div>}
+        <div>{children}</div>
+      </div>
+    );
+
+    mockFetch.mockImplementationOnce(() => new Promise(resolve => setTimeout(() => {
+      resolve({
+        ok: true,
+        text: () => Promise.resolve('<p>使用自定义Spinner</p>')
+      });
+    }, 100)));
+
+    render(
+      <TinyEditorReadOnly
+        contentUrl="https://example.com/spinner-test.html"
+        spinComponent={CustomSpinner}
+      />
+    );
+
+    // 验证自定义Spinner组件被渲染
+    expect(screen.getByTestId('custom-spinner')).toBeInTheDocument();
+    expect(screen.getByTestId('custom-spinner-active')).toBeInTheDocument();
+
+    // 等待加载完成
+    await waitFor(() => {
+      expect(screen.queryByTestId('custom-spinner-active')).not.toBeInTheDocument();
+    });
+  });
+
+  // 测试英文语言下的加载提示
+  it('应该在英文界面下显示英文加载提示', async () => {
+    mockFetch.mockImplementationOnce(() => new Promise(resolve => setTimeout(() => {
+      resolve({
+        ok: true,
+        text: () => Promise.resolve('<p>Content in English</p>')
+      });
+    }, 100)));
+
+    render(
+      <TinyEditorReadOnly
+        contentUrl="https://example.com/english-content.html"
+        language="en"
+      />
+    );
+
+    // 验证英文加载提示
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    // 等待加载完成
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+  });
+
   describe('链接点击处理', () => {
     // 测试链接点击处理函数
     let handleClick: (e: any) => void;

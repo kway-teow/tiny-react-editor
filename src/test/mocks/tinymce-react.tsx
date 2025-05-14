@@ -9,6 +9,8 @@ export interface EditorProps {
   init?: any;
   className?: string;
   disabled?: boolean;
+  tinymceScriptSrc?: string;
+  style?: React.CSSProperties;
 }
 
 export const MockEditorComponent: FC<EditorProps> = ({
@@ -18,7 +20,9 @@ export const MockEditorComponent: FC<EditorProps> = ({
   initialValue,
   init,
   className,
-  disabled
+  disabled,
+  tinymceScriptSrc,
+  style
 }) => {
   const [content, setContent] = useState(initialValue || value || '');
   const editorRef = useRef<any>(null);
@@ -79,8 +83,17 @@ export const MockEditorComponent: FC<EditorProps> = ({
     };
   }, [onInit]);
 
+  // 确保className包含用户提供的类名
+  const containerClassName = className
+    ? (className || 'tinymce-editor-spinner-content')
+    : 'tinymce-editor-spinner-content';
+
   return (
-    <div className={className || 'tinymce-editor-spinner-content'} style={init?.style}>
+    <div
+      className={containerClassName}
+      style={style || init?.style}
+      data-testid="mock-tinymce-container"
+    >
       <textarea
         data-testid="mock-tinymce-textarea"
         value={content}
@@ -92,14 +105,17 @@ export const MockEditorComponent: FC<EditorProps> = ({
         disabled={disabled}
       />
       {init && (
-        <pre data-testid="mock-tinymce-config">
+        <pre data-testid="mock-tinymce-init-config">
           {JSON.stringify({
             ...init,
             disabled: disabled
           }, null, 2)}
         </pre>
       )}
-      <div data-testid="mock-tinymce-editor"></div>
+      <div
+        data-testid="mock-tinymce-editor"
+        data-tinymce-script-src={tinymceScriptSrc}
+      ></div>
     </div>
   );
 };

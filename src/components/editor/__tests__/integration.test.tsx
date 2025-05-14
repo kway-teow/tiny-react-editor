@@ -36,7 +36,7 @@ describe('编辑器集成测试', () => {
   it('应该在不同语言下正确渲染菜单', () => {
     // 中文模式
     const { unmount: unmountZh } = render(<TinyEditor language="zh_CN" />);
-    let editorConfig = JSON.parse(screen.getByTestId('mock-tinymce-config').textContent || '{}');
+    let editorConfig = JSON.parse(screen.getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.language).toBe('zh_CN');
     expect(editorConfig.menu.file.title).toBe('文件');
@@ -45,7 +45,7 @@ describe('编辑器集成测试', () => {
 
     // 英文模式
     render(<TinyEditor language="en" />);
-    editorConfig = JSON.parse(screen.getByTestId('mock-tinymce-config').textContent || '{}');
+    editorConfig = JSON.parse(screen.getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.language).toBe('en');
     expect(editorConfig.menu.file.title).toBe('File');
@@ -73,7 +73,7 @@ describe('编辑器集成测试', () => {
       />
     );
 
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     // 检查配置是否正确应用
     expect(editorConfig.height).toBe(customConfig.height);
@@ -89,7 +89,7 @@ describe('编辑器集成测试', () => {
 
   it('禁用状态下不应该允许编辑', () => {
     const { getByTestId } = render(<TinyEditor disabled={true} />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.disabled).toBe(true);
   });

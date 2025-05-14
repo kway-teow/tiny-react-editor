@@ -72,7 +72,7 @@ describe('TinyEditor', () => {
   // 测试showCodeButton属性
   it('默认应该不显示code按钮', () => {
     const { getByTestId } = render(<TinyEditor />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     // 检查工具栏配置中是否不包含code按钮
     const toolbarConfig = editorConfig.toolbar.join(' ');
@@ -84,7 +84,7 @@ describe('TinyEditor', () => {
 
   it('当showCodeButton为true时应该显示code按钮', () => {
     const { getByTestId } = render(<TinyEditor showCodeButton={true} />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     // 检查工具栏配置中是否包含code按钮
     const toolbarConfig = editorConfig.toolbar.join(' ');
@@ -98,7 +98,7 @@ describe('TinyEditor', () => {
   it('应该合并自定义插件', () => {
     const customPlugins = ['customPlugin1', 'customPlugin2'];
     const { getByTestId } = render(<TinyEditor plugins={customPlugins} />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     customPlugins.forEach(plugin => {
       expect(editorConfig.plugins).toContain(plugin);
@@ -108,7 +108,7 @@ describe('TinyEditor', () => {
   it('应该合并自定义工具栏', () => {
     const customToolbar = ['custom1 custom2', 'custom3 custom4'];
     const { getByTestId } = render(<TinyEditor toolbar={customToolbar} />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     customToolbar.forEach(toolbarItem => {
       expect(editorConfig.toolbar).toContain(toolbarItem);
@@ -118,7 +118,7 @@ describe('TinyEditor', () => {
   // 测试语言切换
   it('应该根据language设置正确的语言', () => {
     const { getByTestId } = render(<TinyEditor language="zh_CN" />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.language).toBe('zh_CN');
     // 检查菜单是否使用了中文
@@ -128,7 +128,7 @@ describe('TinyEditor', () => {
 
   it('英文界面下应该使用英文菜单', () => {
     const { getByTestId } = render(<TinyEditor language="en" />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.language).toBe('en');
     // 检查菜单是否使用了英文
@@ -139,7 +139,7 @@ describe('TinyEditor', () => {
   // 测试链接点击处理
   it('应该设置链接相关配置', () => {
     const { getByTestId } = render(<TinyEditor />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.link_assume_external_targets).toBe(true);
     expect(editorConfig.link_context_toolbar).toBe(true);
@@ -149,7 +149,7 @@ describe('TinyEditor', () => {
   // 测试自定义内容样式
   it('应该应用自定义内容样式', () => {
     const { getByTestId } = render(<TinyEditor />);
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.content_style).toContain('body { font-family: simsun; }');
   });
@@ -168,7 +168,7 @@ describe('TinyEditor', () => {
       />
     );
 
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.font_family_formats).toBe(customFontFamily);
     expect(editorConfig.font_size_formats).toBe(customFontSize);
@@ -183,7 +183,7 @@ describe('TinyEditor', () => {
       <TinyEditor blockFormats={customBlockFormats} />
     );
 
-    const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+    const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
     expect(editorConfig.block_formats).toBe(customBlockFormats);
   });

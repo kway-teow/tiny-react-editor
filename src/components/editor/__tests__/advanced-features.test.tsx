@@ -15,7 +15,7 @@ describe('编辑器高级功能测试', () => {
   describe('链接处理', () => {
     it('应该设置正确的链接相关配置', () => {
       const { getByTestId } = render(<TinyEditor />);
-      const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+      const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
       // 验证链接相关设置
       expect(editorConfig.link_assume_external_targets).toBe(true);
@@ -27,7 +27,7 @@ describe('编辑器高级功能测试', () => {
   describe('字体相关设置', () => {
     it('默认字体应该是宋体', () => {
       const { getByTestId } = render(<TinyEditor />);
-      const editorConfig = JSON.parse(getByTestId('mock-tinymce-config').textContent || '{}');
+      const editorConfig = JSON.parse(getByTestId('mock-tinymce-init-config').textContent || '{}');
 
       // 验证默认字体相关设置
       expect(editorConfig.content_style).toContain('font-family: simsun');

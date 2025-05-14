@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.1](https://github.com/kway-teow/tiny-react-editor/compare/v0.1.0...v0.1.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* 更新测试用例以使用正确的配置数据 ([4220028](https://github.com/kway-teow/tiny-react-editor/commit/4220028438c19834717ff43eb60121c71026aca2))
+
+
+### Features
+
+* 添加 TinyEditor 组件的预览功能测试用例 ([23b123c](https://github.com/kway-teow/tiny-react-editor/commit/23b123ce66dd599f9262c92bf04a8e814b7e08f1))
+
 # [0.1.0](https://github.com/kway-teow/tiny-react-editor/compare/v0.0.3...v0.1.0) (2025-05-13)
 
 
